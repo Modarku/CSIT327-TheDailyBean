@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dailybean',
+    'signup',
+    'login',
 ]
 
 MIDDLEWARE = [
@@ -80,6 +83,8 @@ DATABASES = {
     }
 }
 
+# User model
+AUTH_USER_MODEL = 'login.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
