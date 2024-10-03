@@ -1,0 +1,145 @@
+{% extends "_base.html" %}
+
+{% block title %}
+    The Daily Bean
+{% endblock %}
+
+{% block head %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/styles.css">
+{% endblock %}
+
+{% block content %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/styles.css">
+    <!-- Navbar -->
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="static/images/logo.png" alt="The Daily Bean Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="#">Subscriptions</a></li>
+                <li><a href="#">Contacts</a></li>
+            </ul>
+
+            <div class="nav-icons">
+                {% if is_authenticated %}
+                    <a href="account/" class="icon">
+                {% else %}
+                    <span class="welcome-text">Not Logged In</span>
+                    <a href="login/" class="icon">
+                {% endif %}
+                <img src="/static/images/account-icon.png" alt="accounts"></a>
+                <span><a href="#">🛒</a></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Sip, Savor, Repeat.</h1>
+            <p>50+ Products | 100+ Subscriptions</p>
+            <a href="#" class="btn">Explore</a>
+        </div>
+        <div class="hero-image">
+            <img src="https://neurosciencenews.com/files/2023/06/coffee-brain-caffeine-neuroscincces-1155x770.jpg" alt="Coffee Cup">
+        </div>
+    </section>
+
+    <!-- New Products Section -->
+    <section class="new-products">
+        <h2>Newly Added Beans!</h2>
+        <p>The Daily Bean ensures you will enjoy these new flavors!</p>
+        <div class="products-container">
+            <div class="product">
+                <img src="../static/images/coffee_beans_1.jpeg" alt="Midnight Reserve">
+                <p>Midnight Reserve</p>
+                <span>₱ 395.00</span>
+            </div>
+            <div class="product">
+                <img src="static/images/coffee_beans_2.jpg" alt="Golden Sunrise Blend">
+                <p>Golden Sunrise Blend</p>
+                <span>₱ 425.00</span>
+            </div>
+            <div class="product">
+                <img src="static/images/coffee_beans_3.jpg" alt="Velvet Caramel Delight">
+                <p>Velvet Caramel Delight</p>
+                <span>₱ 475.00</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about-us">
+        <h2>About us</h2>
+        <p>Order now and appreciate the beauty of nature</p>
+        <div class="features">
+            <div class="feature">
+                <img src="static/images/large-assortment.png" alt="Large Assortment">
+                <h3>Large Assortment</h3>
+                <p>We offer many different types of products with fewer variations in each category.</p>
+            </div>
+            <div class="feature">
+                <img src="static/images/fast-delivery.png" alt="Fast Delivery">
+                <h3>Fast & Free Shipping</h3>
+                <p>4-day or less delivery time, free shipping and an expedited delivery option.</p>
+            </div>
+            <div class="feature">
+                <img src="static/images/support.png" alt="24/7 Support">
+                <h3>24/7 Support</h3>
+                <p>Answers to any business-related inquiry 24/7 and in real-time.</p>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}
+
+{% block footer %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/styles.css">
+
+    <footer class="footer-section">
+        <div class="footer-logo">
+            <h3>The Daily Bean</h3>
+            <p>Sip. Savor. Repeat.</p>
+        </div>
+        <div class="footer-links">
+            <div>
+                <h4>Information</h4>
+                <a href="#">About</a>
+                <a href="#">Products</a>
+                <a href="#">Subscriptions</a>
+                <a href="#">Blog</a>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <a href="#">Community</a>
+                <a href="#">Careers</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="#">Support</a>
+                <a href="#">Help Center</a>
+                <a href="#">Pricing</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 All Rights Reserved | Terms of Use | The Daily Bean</p>
+        </div>
+    </footer>
+
+{% endblock %}
