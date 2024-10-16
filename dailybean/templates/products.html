@@ -1,0 +1,152 @@
+{% extends "_base.html" %}
+
+{% block title %}
+    Add Products
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- Navbar -->
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="static/images/logo.xpng" alt="The Daily Bean Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'homepage' %}">Home</a></li>
+                <li><a href="{% url 'product_list' %}">Products</a></li>
+                <li><a href="#">Subscriptions</a></li>
+                <li><a href="#">Contacts</a></li>
+            </ul>
+
+            <div class="nav-icons">
+                {% if is_authenticated %}
+                    <a href="" class="icon">
+                {% else %}
+                    <span class="welcome-text">Not Logged In</span>
+                    <a href="{% url 'login' %}" class="icon">
+                {% endif %}
+                        <img src="/static/images/account-icon.png" alt="accounts">
+                    </a>
+                <span>
+                    {% if is_admin %}
+                        <a href="{% url 'adminproductpage' %}" class="icon">PRODUCT PAGE</a>
+                    {% else %}
+                        <a href="{% url 'cartpage' %}">🛒</a>
+                    {% endif %}
+                </span>
+            </div>
+        </nav>
+    </header>
+    <div style="padding: 10px; margin: 20px 5%;">
+        <div style="margin: 0 5% 100px 5%; background-image: linear-gradient(#EAE7DD, #D5C7AD); border-radius: 24px; padding: 20px;">
+            <div style="margin: 80px 20px 60px 20px;">
+                <h1>Bean Me!</h1><br>
+                <strong>List of very absurdly good coffee on sale - enjoy!</strong>
+            </div>
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 25px; text-align: center; margin: 20px">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <strong>Dark Roast</strong>
+                    <img src="https://www.nescafe.com/th/sites/default/files/2024-03/article%20banner_desk.jpg" alt="Light Roast" style="width: 100%; overflow: hidden; border-radius: 24px;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <strong>Medium Roast</strong>
+                    <img src="https://www.nescafe.com/th/sites/default/files/2024-03/article%20banner_desk.jpg" alt="Light Roast" style="width: 100%; overflow: hidden; border-radius: 24px;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <strong>Light Roast</strong>
+                    <img src="https://www.nescafe.com/th/sites/default/files/2024-03/article%20banner_desk.jpg" alt="Light Roast" style="width: 100%; overflow: hidden; border-radius: 24px;">
+                </div>
+            </div>
+            <div style="height: 80px; display: flex; flex-direction: row; gap: 20px; margin: 0 30px 0 30px; align-items: center; justify-content: center; ">
+                {% if is_admin %}
+                    <a href="{% url 'adminproductpage' %}" style="height: 40px;"><button class="btn" style="height: 40px;">Create Product</button></a>
+                {% endif %}
+                <div style="height: 60px ;display: flex; flex-direction: row; flex: 1; flex-grow: 1; align-items: center; justify-content: center; background-color: white; border-radius: 12px; padding: 0 10px">
+                    <input type="text" placeholder="What are you looking for?" style="height: 30px;display: flex; flex: 1; flex-grow: 1; outline: none; border: none;">
+                    <div style="background-color: #D5C7AD; border-radius: 6px; height: 40px; display: flex; align-items: center; justify-content: center; ">
+                        <img src="/static/images/search-icon.png" alt="Search Icon" style="margin: auto 10px auto 10px; height: 20px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="flex: 1; display: flex; flex-wrap: wrap; gap: 25px; align-items: center; justify-content: center;">
+            {% for product in products %}
+            <a href="" style="display:flex; width: 250px; display: flex; flex-direction: column; text-align: left; text-decoration: none; color: black;">
+                <img src="{{ product.imageurl }}" alt="{{ product.name }}" style="object-fit: cover; height: 300px; overflow: hidden; border-radius: 12px;">
+                <div style="width:80%; margin: 10px 0;">
+                    <img src="/static/images/star.png" style="width: 15%;">
+                    {% if product.total_rating >= 2 %}
+                    <img src="/static/images/star.png" style="width: 15%">
+                    {% else %}
+                    <img src="" style="width: 15%">
+                    {% endif %}
+                    {% if product.total_rating >= 3 %}
+                    <img src="/static/images/star.png" style="width: 15%">
+                    {% else %}
+                    <img src="" style="width: 15%">
+                    {% endif %}
+                    {% if product.total_rating >= 4 %}
+                    <img src="/static/images/star.png" style="width: 15%">
+                    {% else %}
+                    <img src="" style="width: 15%">
+                    {% endif %}
+                    {% if product.total_rating >= 5 %}
+                    <img src="/static/images/star.png" style="width: 15%">
+                    {% else %}
+                    <img src="" style="width: 15%">
+                    {% endif %}
+                </div>
+                <strong>{{ product.name }}</strong>
+                <strong>{{ product.price }}</strong>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/styles.css">
+
+    <footer class="footer-section">
+        <div class="footer-logo">
+            <h3>The Daily Bean</h3>
+            <p>Sip. Savor. Repeat.</p>
+        </div>
+        <div class="footer-links">
+            <div>
+                <h4>Information</h4>
+                <a href="#">About</a>
+                <a href="#">Products</a>
+                <a href="#">Subscriptions</a>
+                <a href="#">Blog</a>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <a href="#">Community</a>
+                <a href="#">Careers</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="#">Support</a>
+                <a href="#">Help Center</a>
+                <a href="#">Pricing</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 All Rights Reserved | Terms of Use | The Daily Bean</p>
+        </div>
+    </footer>
+
+{% endblock %}

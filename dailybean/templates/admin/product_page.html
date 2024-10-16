@@ -1,0 +1,123 @@
+{% extends "_base.html" %}
+
+{% block title %}
+    Add Products
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- Navbar -->
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="static/images/logo.xpng" alt="The Daily Bean Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'homepage' %}">Home</a></li>
+                <li><a href="{% url 'product_list' %}">Products</a></li>
+                <li><a href="#">Subscriptions</a></li>
+                <li><a href="#">Contacts</a></li>
+            </ul>
+
+            <div class="nav-icons">
+                {% if is_authenticated %}
+                    <a href="" class="icon">
+                {% else %}
+                    <span class="welcome-text">Not Logged In</span>
+                    <a href="{% url 'login' %}" class="icon">
+                {% endif %}
+                        <img src="/static/images/account-icon.png" alt="accounts">
+                    </a>
+                <span>
+                    {% if is_admin %}
+                        <a href="{% url 'adminproductpage' %}" class="icon">PRODUCT PAGE</a>
+                    {% else %}
+                        <a href="{% url 'cartpage' %}">🛒</a>
+                    {% endif %}
+                </span>
+            </div>
+        </nav>
+    </header>
+    
+    <div style="padding: 10px; margin: 20px 5%;">
+        <h1>ADMIN PRODUCT PAGE</h1>
+        <ul style="padding: 10px; list-style-type: none;">
+            <li style="margin: 20px 0; font-size: x-large;">
+                <a href="{% url 'addproduct' %}">
+                    <button class="btn signup-btn"> Add Product</button>
+                </a>
+            </li>
+            <li style="margin: 20px 0; font-size: x-large;">
+                <h3 style="text-align: center;">Modify Product</h3>
+                <br>
+                <div style="flex: 1; display: flex; flex-wrap: wrap; gap: 25px; align-items: center; justify-content: center;">
+                    {% for product in products %}
+                    <a href="{% url 'modifyproduct' product.id %}" style="display:flex; width: 250px; display: flex; flex-direction: column; text-align: left; text-decoration: none; color: black; font-size: medium;">
+                        <img src="{{ product.imageurl }}" alt="{{ product.name }}" style="object-fit: cover; height: 100px; overflow: hidden; border-radius: 12px;">
+                        <strong style="font-size: large;">{{ product.name }}</strong>
+                        <ul>
+                            <li>Rating: {{ product.total_rating }}</li>
+                            <!-- <li>Price: {{ product.price }}</li> -->
+                            <li>Created: {{ product.created_at|date:"y-m-d" }}<br>
+                                {{ product.created_at|time:"H:i" }}
+                            </li>
+                            <li>Description: {{ product.description }}</li>
+                        </ul>
+                        <span></span>
+                        <!--  -->
+                        <p></p>
+                        <span></span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </li>
+        </ul>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/styles.css">
+
+    <footer class="footer-section">
+        <div class="footer-logo">
+            <h3>The Daily Bean</h3>
+            <p>Sip. Savor. Repeat.</p>
+        </div>
+        <div class="footer-links">
+            <div>
+                <h4>Information</h4>
+                <a href="#">About</a>
+                <a href="#">Products</a>
+                <a href="#">Subscriptions</a>
+                <a href="#">Blog</a>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <a href="#">Community</a>
+                <a href="#">Careers</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="#">Support</a>
+                <a href="#">Help Center</a>
+                <a href="#">Pricing</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 All Rights Reserved | Terms of Use | The Daily Bean</p>
+        </div>
+    </footer>
+
+{% endblock %}
