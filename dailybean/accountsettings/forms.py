@@ -9,7 +9,4 @@ class UserEditForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email']
 
 class ChangePasswordForm(SetPasswordForm):
-    class Meta:
-        model = User
-        fields = ['new_password', 'check_new_password'] 
-    
+    pass

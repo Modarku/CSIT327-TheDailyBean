@@ -1,0 +1,132 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Add Products
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- Navbar -->
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="The Daily Bean Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'homepage' %}">Home</a></li>
+                <li><a href="{% url 'product_list' %}">Products</a></li>
+                <li><a href="#">Subscriptions</a></li>
+                <li><a href="#">Contacts</a></li>
+            </ul>
+
+            <div class="nav-icons">
+                {% if is_authenticated %}
+                    <a href="" class="icon">
+                {% else %}
+                    <span class="welcome-text">Not Logged In</span>
+                    <a href="{% url 'login' %}" class="icon">
+                {% endif %}
+                        <img src="/static/images/account-icon.png" alt="accounts">
+                    </a>
+                <span>
+                    {% if is_admin %}
+                        <a href="{% url 'adminproductpage' %}" class="icon">PRODUCT PAGE</a>
+                    {% else %}
+                        <a href="{% url 'cartpage' %}">🛒</a>
+                    {% endif %}
+                </span>
+            </div>
+        </nav>
+    </header>
+    <div style="padding: 10px;">
+        {% if is_admin %}
+        <h1>MODIFY PRODUCT</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+        
+            <label for="product_name">Product Name:</label>
+            {{ form.product_name.errors }}
+            {{ form.product_name }}
+        
+            <label for="product_description">Description:</label>
+            {{ form.product_description.errors }}
+            {{ form.product_description }}
+        
+            <label for="product_ingredients">Ingredients:</label>
+            {{ form.product_ingredients.errors }}
+            {{ form.product_ingredients }}
+        
+            <label for="product_shelflife">Shelf Life:</label>
+            {{ form.product_shelflife.errors }}
+            {{ form.product_shelflife }}
+        
+            <label for="product_image">Image:</label>
+            {{ form.product_image.errors }}
+            {{ form.product_image }}
+        
+            <label for="stock">Stock:</label>
+            {{ form.stock.errors }}
+            {{ form.stock }}
+        
+            <label for="price">Price:</label>
+            {{ form.price.errors }}
+            {{ form.price }}
+        
+            <button type="submit" class="btn signup-btn">Modify Product</button>
+        </form>
+        {% else %}
+            <h2>get out</h2>
+        {% endif %}
+        
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/styles.css">
+
+    <footer class="footer-section">
+        <div class="footer-logo">
+            <h3>The Daily Bean</h3>
+            <p>Sip. Savor. Repeat.</p>
+        </div>
+        <div class="footer-links">
+            <div>
+                <h4>Information</h4>
+                <a href="#">About</a>
+                <a href="#">Products</a>
+                <a href="#">Subscriptions</a>
+                <a href="#">Blog</a>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <a href="#">Community</a>
+                <a href="#">Careers</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="#">Support</a>
+                <a href="#">Help Center</a>
+                <a href="#">Pricing</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 All Rights Reserved | Terms of Use | The Daily Bean</p>
+        </div>
+    </footer>
+
+{% endblock %}

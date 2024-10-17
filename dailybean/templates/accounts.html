@@ -25,8 +25,8 @@
                 <img src="../static/images/logo.png" alt="The Daily Bean Logo">
             </div>
             <ul class="nav-links">
-                <li><a href="../../">Home</a></li>
-                <li><a href="#">Products</a></li>
+                <li><a href="{% url 'homepage' %}">Home</a></li>
+                <li><a href="{% url 'product_list' %}">Products</a></li>
                 <li><a href="#">Subscriptions</a></li>
                 <li><a href="#">Contacts</a></li>
             </ul>
@@ -108,15 +108,15 @@
             <form method="POST" onsubmit="return confirmChangePassword();">
                 {% csrf_token %}
                 {{ password_form.non_field_errors }}
-
-                <label for="new-password">Password:</label>
-                {{ password_form.new_password.errors }}
-                {{ password_form.new_password }}
-
+                {{ password_form.as_p }}
+                <!-- <label for="new-password">Password:</label>
+                {{ password_form.new_password1.errors }}
+                {{ password_form.new_password1 }}
+            
                 <label for="confirm-password">Re-enter Password:</label>
-                {{ password_form.check_new_password.errors }}
-                {{ password_form.check_new_password }}
-
+                {{ password_form.new_password2.errors }}
+                {{ password_form.new_password2 }} -->
+            
                 <button type="submit" name="change_password" class="btn change-password-btn">Change Password</button>
             </form>
         </div>
