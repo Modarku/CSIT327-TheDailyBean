@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,4 +25,10 @@ urlpatterns = [
     path('signup/', include('signup.urls')),
     path('login/', include('login.urls')),
     path('account/', include('accountsettings.urls')),
+    path('adminproduct/', include('adminproductpage.urls')),
+    path('cart/', include('cartlist.urls')),
+    path('products/', include('productpage.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

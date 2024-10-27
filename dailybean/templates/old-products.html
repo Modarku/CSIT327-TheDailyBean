@@ -1,0 +1,144 @@
+{% extends "_base.html" %}
+
+{% block title %}
+    The Daily Bean - Products
+{% endblock %}
+
+{% block head %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/styles.css">
+{% endblock %}
+
+{% block content %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- Navbar -->
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="../static/images/logo.png" alt="The Daily Bean Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'homepage' %}">Home</a></li>
+                <li><a href="{% url 'product_list' %}">Products</a></li>
+                <li><a href="#">Subscriptions</a></li>
+                <li><a href="#">Contacts</a></li>
+            </ul>
+
+            <div class="nav-icons">
+                {% if is_authenticated %}
+                    <a href="{% url 'account' %}" class="icon">
+                {% else %}
+                    <span class="welcome-text">Not Logged In</span>
+                    <a href="{% url 'login' %}" class="icon">
+                {% endif %}
+                <img src="/static/images/account-icon.png" alt="accounts"></a>
+                <span><a href="#">🛒</a></span>
+            </div>
+        </nav>
+    </header>
+
+    <div class="product-container">
+        <!-- Header Section -->
+        <h1>Bean me!</h1>
+        <p>List of every carefully good coffee on sale - enjoy!</p>
+    
+        <!-- Product Categories Section -->
+        <div class="product-categories">
+            <div class="product-category">
+                <img src="../static/images/dark_roast.jpg" alt="Dark Roast">
+                <h3>Dark Roast</h3>
+            </div>
+            <div class="product-category">
+                <img src="../static/images/medium_roast.jpg" alt="Medium Roast">
+                <h3>Medium Roast</h3>
+            </div>
+            <div class="product-category">
+                <img src="../static/images/light_roast.jpg" alt="Light Roast">
+                <h3>Light Roast</h3>
+            </div>
+        </div>
+    
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input class="search-input" type="text" placeholder="What are you looking for?">
+            <button class="search-btn">Search</button>
+        </div>
+    
+        <!-- Product Listings -->
+        <div class="product-list">
+            <div class="product-item">
+                <img src="../static/images/coffee_beans_1.jpeg" alt="Midnight Reserve">
+                <h4>Midnight Reserve</h4>
+                <div class="product-rating">★★★★★</div>
+                <p class="product-price">₱ 349.00</p>
+            </div>
+            <div class="product-item">
+                <img src="../static/images/coffee_beans_2.jpg" alt="Golden Sunrise Blend">
+                <h4>Golden Sunrise Blend</h4>
+                <div class="product-rating">★★★★★</div>
+                <p class="product-price">₱ 425.00</p>
+            </div>
+            <div class="product-item">
+                <img src="../static/images/coffee_beans_3.jpg" alt="Velvet Caramel Delight">
+                <h4>Velvet Caramel Delight</h4>
+                <div class="product-rating">★★★★★</div>
+                <p class="product-price">₱ 475.00</p>
+            </div>
+            <div class="product-item">
+                <img src="../static/images/coffee_beans_4.jpg" alt="Hazelnut Harmony">
+                <h4>Hazelnut Harmony</h4>
+                <div class="product-rating">★★★★★</div>
+                <p class="product-price">₱ 495.00</p>
+            </div>
+            <!-- Repeat for more products -->
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block footer %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/styles.css">
+
+    <footer class="footer-section">
+        <div class="footer-logo">
+            <h3>The Daily Bean</h3>
+            <p>Sip. Savor. Repeat.</p>
+        </div>
+        <div class="footer-links">
+            <div>
+                <h4>Information</h4>
+                <a href="#">About</a>
+                <a href="#">Products</a>
+                <a href="#">Subscriptions</a>
+                <a href="#">Blog</a>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <a href="#">Community</a>
+                <a href="#">Careers</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="#">Support</a>
+                <a href="#">Help Center</a>
+                <a href="#">Pricing</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 All Rights Reserved | Terms of Use | The Daily Bean</p>
+        </div>
+    </footer>
+
+{% endblock %}

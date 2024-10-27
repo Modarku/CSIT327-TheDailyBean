@@ -7,11 +7,12 @@ from django.contrib.auth import logout
 def homepage(request):
     context = {
         'is_authenticated': request.user.is_authenticated,
+        'is_admin': request.user.is_staff,
         'products': Product.objects.all(),
     }
     return render(request, 'home.html', context)
 
 def logout_view(request):
     logout(request)
-    return redirect('../../')
+    return redirect('homepage')
 
