@@ -97,7 +97,6 @@ nav {
 h2 {
     font-family: "Fjalla One", sans-serif;
     color: #333;
-    margin-bottom: 15px;
 }
 
 .btn {
@@ -247,8 +246,13 @@ h2 {
     margin-top: 20px;
 }
 
+.logo {
+    display: flex;
+    align-items: center;
+}
+
 .logo-img {
-    height: 200px; 
+    width: 200px;
 }
 
 /* Login Form Container */
@@ -402,10 +406,37 @@ h2 {
 
 /* Footer */
 .footer-section {
-    background-color: #b07d52;
+    background-color: #D5C7AC;
+    display: flex;
+    justify-content: space-between;
     padding: 20px;
-    text-align: center;
     margin-top: 50px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.footer-links {
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-components {
+    width: 110px;
+    height: 150px;
+    margin-left: 10px;
+    gap: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .footer-logo h3 {
@@ -680,11 +711,6 @@ section {
 
     .feature {
         margin-bottom: 20px;
-    }
-
-    .footer-links {
-        flex-direction: column;
-        gap: 20px;
     }
 }
 
