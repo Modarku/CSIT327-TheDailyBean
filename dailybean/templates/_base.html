@@ -22,8 +22,8 @@
           </div>
           <ul class="nav-links">
               <li><a href="{% url 'homepage' %}">Home</a></li>
-              <li><a href="{% url 'product_list' %}">Products</a></li>
-              <li><a href="#">Subscriptions</a></li>
+              <li><a href="{% url 'product_list' %}?page=products">Products</a></li>
+              <li><a href="{% url 'product_list' %}?page=subscriptions">Subscriptions</a></li>
               <li><a href="#">Contacts</a></li>
           </ul>
 
@@ -35,7 +35,7 @@
                   <a href="{% url 'login' %}" class="icon">
               {% endif %}
               <img src="{% static 'images/account-icon.png' %}" alt="accounts"></a>
-              <span><a href="#">🛒</a></span>
+              <span><a href="{% url 'cartpage' %}"><img src="{% static 'images/cart-icon.png' %}" alt="accounts"></a></a></span>
           </div>
       </nav>
   </header>

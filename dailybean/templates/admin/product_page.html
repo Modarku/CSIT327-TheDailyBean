@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     
     <div style="padding: 10px; margin: 20px 5%;">
+        {% if is_admin %}
         <h1>ADMIN PRODUCT PAGE</h1>
         <ul style="padding: 10px; list-style-type: none;">
             <li style="margin: 20px 0; font-size: x-large;">
@@ -24,9 +25,9 @@
             <li style="margin: 20px 0; font-size: x-large;">
                 <h3 style="text-align: center;">Modify Product</h3>
                 <br>
-                <div style="flex: 1; display: flex; flex-wrap: wrap; gap: 25px; align-items: center; justify-content: center;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly;">
                     {% for product in products %}
-                    <a href="{% url 'modifyproduct' product.id %}" style="display:flex; width: 250px; display: flex; flex-direction: column; text-align: left; text-decoration: none; color: black; font-size: medium;">
+                    <a href="{% url 'modifyproduct' product.id %}" class="product-item" style="display: flex; flex-direction: column; align-items: center; text-decoration: none; color: black; font-size: medium;">
                         <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
                         <strong style="font-size: large;">{{ product.product_name }}</strong>
                         <ul>
@@ -35,9 +36,10 @@
                             <li>Created: {{ product.created_at|date:"y-m-d" }}<br>
                                 {{ product.created_at|time:"H:i" }}
                             </li>
+                            <li>Stock: {{ product.stock }}</li>
+                            <li>Is Available: {{ product.is_available }}</li>
                         </ul>
                         <span></span>
-                        <!--  -->
                         <p></p>
                         <span></span>
                     </a>
@@ -45,6 +47,9 @@
                 </div>
             </li>
         </ul>
+        {% else %}
+        <h2>get out</h2>
+        {% endif %}
     </div>
 
 {% endblock %}

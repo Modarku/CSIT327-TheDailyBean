@@ -6,14 +6,6 @@
     Product - {{ product.product_name }}
 {% endblock %}
 
-{% block head %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-{% endblock %}
-
 {% block content %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,18 +14,24 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     <body>
-        <!-- Product Detail Container -->
         <div class="product-detail-container">
-            <a href="{% url 'product_list' %}" class="back-link">← Back to Products</a>
+            {% if request.GET.from == 'subscriptions' %}
+                <h2> SUBSCRIBE </h2>
+            {% else %}
+                <h2> PRODUCT PURCHASE </h2>
+            {% endif %}
+
+            {% if request.GET.from == 'subscriptions' %}
+                <a href="{% url 'product_list' %}?page=subscriptions" class="back-link">← Back to Subscription</a>
+            {% else %}
+                <a href="{% url 'product_list' %}?page=products" class="back-link">← Back to Products</a>
+            {% endif %}
     
-            <!-- Product Information -->
             <div class="product-detail">
-                <!-- Product Image -->
                 <div class="product-image">
                     <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
                 </div>
     
-                <!-- Product Description -->
                 <div class="product-info">
                     <h1>{{ product.product_name }}</h1>
 
@@ -74,18 +72,24 @@
     
                     <h4>Shelf Life:</h4>
                     <p>{{ product.product_shelflife }}</p>
-    
-                    <!-- Quantity Selector -->
-                    <div class="quantity-selector">
-                        <label for="quantity">Qty:</label>
-                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}">
-                    </div>
 
                     <h4>Price:</h4>
                     <p>{{ product.price }}</p>
-    
+                    
+                    {% if request.GET.from == 'subscriptions' %}
+                    <!-- Add to Subscription Button -->
+                        <button class="add-to-cart-btn">Add to Subscription</button>
+                    {% else %}
                     <!-- Add to Cart Button -->
-                    <button class="add-to-cart-btn">Add to Cart</button>
+                    <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        <div class="quantity-selector">
+                            <label for="quantity">Qty:</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}">
+                        </div>
+                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                    </form>
+                    {% endif %}
                 </div>
             </div>
     

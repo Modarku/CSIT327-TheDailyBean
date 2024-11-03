@@ -21,7 +21,7 @@ def login_view(request):
             if user and user.check_password(password):
                 auth.login(request, user)
                 messages.success(request, 'Login successful!')
-                return redirect('../../')
+                return redirect('homepage')
             else:
                 messages.error(request, 'Invalid credentials.')
     else:

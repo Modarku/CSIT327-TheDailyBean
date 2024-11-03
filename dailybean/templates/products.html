@@ -6,9 +6,6 @@
     Add Products
 {% endblock %}
 
-{% block head %}
-{% endblock %}
-
 {% block content %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,41 +14,45 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     
     <div class="product-container">
-        <!-- Header Section -->
-        <h1>Bean me!</h1>
-        <p>List of every carefully good coffee on sale - enjoy!</p>
-    
-        <!-- Product Categories Section -->
-        <div class="product-categories">
-            <div class="product-category">
-                <img src="{% static 'images/dark_roast.jpg' %}" alt="Dark Roast">
-                <h3>Dark Roast</h3>
+        <div class="product-header">
+            <div style="margin: 30px;">
+                <h1>Bean me!</h1>
+                <p>List of every carefully good coffee on sale - enjoy!</p>
             </div>
-            <div class="product-category">
-                <img src="{% static 'images/medium_roast.jpg' %}" alt="Medium Roast">
-                <h3>Medium Roast</h3>
+            
+            <!-- Product Categories Section -->
+            <div class="product-categories">
+                <div class="product-category">
+                    <h3>Dark Roast</h3>
+                    <img src="{% static 'images/dark-roast.png' %}" alt="Dark Roast">
+                </div>
+                <div class="product-category">
+                    <h3>Medium Roast</h3>
+                    <img src="{% static 'images/med-roast.png' %}" alt="Medium Roast">
+                </div>
+                <div class="product-category">
+                    <h3>Light Roast</h3>
+                    <img src="{% static 'images/light-roast.png' %}" alt="Light Roast">
+                </div>
             </div>
-            <div class="product-category">
-                <img src="{% static 'images/light_roast.jpg' %}" alt="Light Roast">
-                <h3>Light Roast</h3>
-            </div>
-        </div>
 
-        {% if is_admin %}
-        <a href="{% url 'adminproductpage' %}" style="height: 40px;"><button class="btn" style="height: 40px;">Create Product</button></a>
-        {% endif %}
-    
-        <!-- Search Bar -->
-        <div class="search-container">
-            <input class="search-input" type="text" placeholder="What are you looking for?">
-            <button class="search-btn">Search</button>
+            <div style="display: flex; justify-content: center;">
+                {% if is_admin %}
+                <a href="{% url 'adminproductpage' %}" style="height: 40px; padding: 10px;"><button class="btn" style="height: 40px;">Create Product</button></a>
+                {% endif %}
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <input class="search-input" type="text" placeholder="What are you looking for?">
+                    <button class="search-btn">Search</button>
+                </div>
+            </div>
         </div>
-    
+        
         <!-- Product Listings -->
         <div class="product-list">
             {% for product in products %}
                 {% if product.is_available %}
-                    <a href="{% url 'product_detail' product.id %}" style="text-decoration: none; color: inherit;">
+                    <a href="{% url 'product_detail' product.id %}?from=products" style="text-decoration: none; color: inherit;">
                         <div class="product-item">
                             <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
                             <h4>{{ product.product_name }}</h4>

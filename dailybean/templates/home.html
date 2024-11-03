@@ -12,32 +12,39 @@
         <div class="hero-text">
             <h1>Sip, Savor, Repeat.</h1>
             <p>50+ Products | 100+ Subscriptions</p>
-            <a href="{% url 'product_list' %}" class="btn">Explore</a>
-        </div>
-        <div class="hero-image">
-            <img src="https://neurosciencenews.com/files/2023/06/coffee-brain-caffeine-neuroscincces-1155x770.jpg" alt="Coffee Cup">
+            <a href="{% url 'product_list' %}?name=subscriptions" class="btn">Explore Subscriptions →</a>
         </div>
     </section>
 
     <!-- New Products Section -->
     <section class="new-products">
-        <h2>Newly Added Beans!</h2>
-        <p>The Daily Bean ensures you will enjoy these new flavors!</p>
+        <div class="new-products-label">
+            <h1>Newly Added Beans!</h1>
+            <p>The Daily Bean ensures you will enjoy these new flavors!</p>
+            <br>
+            <a href="{% url 'product_list' %}?name=products" class="btn">Explore Products →</a>
+        </div>
         <div class="products-container">
             <div class="product">
                 <img src="/static/images/coffee_beans_1.jpeg" alt="Midnight Reserve">
-                <p>Midnight Reserve</p>
-                <span>₱ 395.00</span>
+                <div>
+                    <p>Golden Sunrise Blend</p>
+                    <span>₱ 425.00</span>
+                </div>
             </div>
             <div class="product">
                 <img src="/static/images/coffee_beans_2.jpg" alt="Golden Sunrise Blend">
-                <p>Golden Sunrise Blend</p>
-                <span>₱ 425.00</span>
+                <div>
+                    <p>Golden Sunrise Blend</p>
+                    <span>₱ 425.00</span>
+                </div>
             </div>
             <div class="product">
                 <img src="/static/images/coffee_beans_3.jpg" alt="Velvet Caramel Delight">
-                <p>Velvet Caramel Delight</p>
-                <span>₱ 475.00</span>
+                <div>
+                    <p>Golden Sunrise Blend</p>
+                    <span>₱ 425.00</span>
+                </div>
             </div>
         </div>
     </section>

@@ -37,10 +37,30 @@
         <!-- Signup Form -->
         <form method="POST" class="signup-form">
             {% csrf_token %}
-            {{ form.as_p }}
-
+            {{ form.username.label_tag }} {{ form.username }}
+            {{ form.email.label_tag }} {{ form.email }}
+            {{ form.first_name.label_tag }} {{ form.first_name }}
+            {{ form.last_name.label_tag }} {{ form.last_name }}
+            
+            <div class="password-field">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+                <button type="button" id="toggle-password" class="toggle-password">
+                    <img src="{% static 'images/eye-icon.png' %}" alt="Show Password" class="show-password fa-eye">
+                </button>
+            </div>
+            
+            <div class="password-field">
+                {{ form.password_confirm.label_tag }}
+                {{ form.password_confirm }}
+                <button type="button" id="toggle-password-confirm" class="toggle-password">
+                    <img src="{% static 'images/eye-icon.png' %}" alt="Show Password" class="show-password fa-eye">
+                </button>
+            </div>
+            
             <button type="submit" class="btn signup-btn">Sign Up</button>
         </form>
+        
 
         <!-- Or With Section -->
         <div class="or-with">
@@ -53,7 +73,45 @@
 
         <!-- Sign-in Section -->
         <div class="signin-section">
-            <p>Already have an account? <a href="../../login/">Log In</a></p>
+            <p>Already have an account? <a href="{% url 'login' %}">Log In</a></p>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Toggle visibility for password field
+            const togglePasswordButton = document.getElementById('toggle-password');
+            const passwordField = document.querySelector('input[name="password"]');
+            const passwordIcon = togglePasswordButton.querySelector('i');
+    
+            togglePasswordButton.addEventListener('click', function () {
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    passwordIcon.classList.remove('fa-eye');
+                    passwordIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    passwordIcon.classList.remove('fa-eye-slash');
+                    passwordIcon.classList.add('fa-eye');
+                }
+            });
+    
+            // Toggle visibility for password_confirm field
+            const toggleConfirmButton = document.getElementById('toggle-password-confirm');
+            const confirmPasswordField = document.querySelector('input[name="password_confirm"]');
+            const confirmIcon = toggleConfirmButton.querySelector('i');
+    
+            toggleConfirmButton.addEventListener('click', function () {
+                if (confirmPasswordField.type === 'password') {
+                    confirmPasswordField.type = 'text';
+                    confirmIcon.classList.remove('fa-eye');
+                    confirmIcon.classList.add('fa-eye-slash');
+                } else {
+                    confirmPasswordField.type = 'password';
+                    confirmIcon.classList.remove('fa-eye-slash');
+                    confirmIcon.classList.add('fa-eye');
+                }
+            });
+        });
+    </script>
 {% endblock %}

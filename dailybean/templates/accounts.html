@@ -90,5 +90,224 @@
         </div>
     </section>
 
+    <!-- Address Section -->
+    {% for message in messages %}
+        <ul>
+            {% if 'msg_add_address' in message.tags %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                    <li style="margin-left: 200px;" class="success-text">
+                {% else %}
+                    <li style="margin-left: 200px;" class="error-text">
+                {% endif %}
+                {{ message }}</li>
+            {% endif %}
+        </ul>
+    {% endfor %}
+    <section class="address-section">
+        <div style="display: flex;">
+            <!-- Address Dropdown -->
+            <div class="address-dropdown">
+                <h2>Address</h2>
+                <div style="display: flex; justify-content: space-between;">
+                    <label for="address-select">Select Default Address:</label>
+                    <img src="{% static 'images/trash-icon.png' %}" onclick="deleteAddress()">
+                </div>
+                <select id="address-select" onchange="setDefaultAddress()">
+                    <option value="">-- Select Address --</option>
+                    {% for address in addresses %}
+                        <option value="{{ address.id }}" {% if address.is_selected %} selected {% endif %}>
+                            {{ address.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button id="toggle-form" class="btn">Switch to Edit Address</button>
+            </div>
+    
+            <!-- Add Address Form -->
+            <form method="POST" style="flex-grow: 1;" class="address-form" id="add-address-form">
+                <h2>Add Address:</h2>
+                {% csrf_token %}
+                
+                <label for="address-name">Name:</label>
+                <input type="text" id="address-name" name="name" value="{{ address_form.name.value|default:'' }}" placeholder="Name" required>
+        
+                <label>Address:</label>
+                <input type="text" id="street-number" name="street_number" value="{{ address_form.street_number.value|default:'' }}" placeholder="Street Number">
+                <input type="text" id="street" name="street" value="{{ address_form.street.value|default:'' }}" placeholder="Street">
+                <input type="text" id="city" name="city" value="{{ address_form.city.value|default:'' }}" placeholder="City" required>
+                <input type="text" id="state" name="state" value="{{ address_form.state.value|default:'' }}" placeholder="State/Province/Region">
+                <input type="text" id="country" name="country" value="{{ address_form.country.value|default:'' }}" placeholder="Country" required>
+        
+                <label for="additional-details">Additional Details:</label>
+                <textarea id="additional-details" name="additional_details" placeholder="Details">{{ address_form.additional_details.value|default:'' }}</textarea>
+                
+                <button type="submit" name="add_address" class="btn add-address-btn">Add Address</button>
+            </form>
+
+            <!-- Edit Address Form -->
+            <form method="POST" style="flex-grow: 1; display: none;" class="address-form" id="edit-address-form" onsubmit="return confirmEditAddress();">
+                <h2>Edit Address:</h2>
+                {% csrf_token %}
+                
+                <label for="address-name">Name:</label>
+                <input type="text" id="edit-address-name" name="name" value="{{ address.name }}" placeholder="Name" required>
+                
+                <label>Address:</label>
+                <input type="text" id="edit-street-number" name="street_number" value="{{ address.street_number }}" placeholder="Street Number">
+                <input type="text" id="edit-street" name="street" value="{{ address.street }}" placeholder="Street">
+                <input type="text" id="edit-city" name="city" value="{{ address.city }}" placeholder="City" required>
+                <input type="text" id="edit-state" name="state" value="{{ address.state }}" placeholder="State/Province/Region">
+                <input type="text" id="edit-country" name="country" value="{{ address.country }}" placeholder="Country" required>
+                
+                <label for="additional-details">Additional Details:</label>
+                <textarea id="edit-additional-details" name="additional_details" placeholder="Details">{{ address.additional_details }}</textarea>
+                
+                <button type="submit" name="edit_address" class="btn edit-address-btn"  onclick="submitEditAddressForm()">Update Address</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Current Subscriptions Section -->
+    <section class="subscriptions-section">
+        <h2>Current Subscriptions</h2>
+        <p>No subscriptions yet... :(</p>
+    </section>
+
+    <!-- Payment History Section -->
+    <section class="payment-history-section">
+        <h2>Payment History</h2>
+        <div class="order-list">
+            {% for order in orders %}
+                {% if order.product.is_available %}
+                    <div class="order-item">
+                        <div style="align-self: center; display: flex;">
+                            <img class="order-img" src="{{ order.product.product_image.url }}" alt="{{ order.product.product_name }}">
+                            <h4 style="align-self: center; margin-left: 10px;">{{ order.product.product_name }}</h4>
+                        </div>
+                        
+                        <p class="product-price" style="align-self: center;">Price: ${{ order.product.price }}</p>
+                        
+                        <h4 style="align-self: center;">Qty: {{ order.product_amount }}</h4>
+                        <p class="product-price" style="align-self: center;">Date purchased: {{ order.date_paid|date:"m/d/Y" }}</p>
+                    </div>    
+                {% endif %}
+            {% empty %}
+                <p>Nothing bought yet... :(</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <script>
+        function confirmEditUser() {
+            return confirm("Are you sure you want to edit your information?");
+        }
+        function confirmChangePassword() {
+            return confirm("Are you sure you want to change your password?");
+        }
+
+        function confirmEditAddress() {
+            return confirm("Are you sure you want to change your address?");
+        }
+
+        function setDefaultAddress() {
+            const addressId = document.getElementById('address-select').value;
+            
+            fetch(`/account/set-default-address/${addressId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            }).then(response => {
+                if (response.ok) {
+                    console.log("Default address updated.");
+                }
+            });
+        }
+
+        document.getElementById('toggle-form').onclick = function() {
+            const addForm = document.getElementById('add-address-form');
+            const editForm = document.getElementById('edit-address-form');
+            const addressId = document.getElementById('address-select').value;
+
+            if (addForm.style.display === 'none') {
+                addForm.style.display = 'block';
+                editForm.style.display = 'none';
+                this.textContent = 'Switch to Edit Address';
+            } else {
+                addForm.style.display = 'none';
+                editForm.style.display = 'block';
+                this.textContent = 'Switch to Add Address';
+            }
+
+            if (addressId) {
+                fetch(`/account/get-address/${addressId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('edit-address-name').value = data.name;
+                        document.getElementById('edit-street-number').value = data.street_number;
+                        document.getElementById('edit-street').value = data.street;
+                        document.getElementById('edit-city').value = data.city;
+                        document.getElementById('edit-state').value = data.state;
+                        document.getElementById('edit-country').value = data.country;
+                        document.getElementById('edit-additional-details').value = data.additional_details;
+                        
+                    });
+            }
+        };
+
+        function submitEditAddressForm() {
+            const form = document.getElementById('edit-address-form');
+            const formData = new FormData(form);
+            const addressId = document.getElementById('address-select').value;
+            alert(addressId)
+
+            fetch(`/account/edit-address/${addressId}/`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Address updated successfully.");
+                    location.reload();
+                } else {
+                    alert("Error updating address.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function deleteAddress() {
+            const confirmation = confirm("Are you sure you want to delete this address?");
+            const addressId = document.getElementById('address-select').value;
+
+            if (confirmation) {
+                fetch(`/account/delete-address/${addressId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}', 
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Address deleted successfully.");
+                        location.reload();
+                    } else {
+                        alert("Error deleting address.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+    </script>
+
 {% endblock %}
 
