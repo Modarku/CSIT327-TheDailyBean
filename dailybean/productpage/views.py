@@ -42,3 +42,20 @@ def add_to_cart(request, product_id):
     )
 
     return redirect('product_list')
+def search_products(request):
+    query = request.GET.get('q')  
+    products = Product.objects.filter(product_name__icontains=query) if query else []
+    return render(request, 'products.html', {'products': products, 'query': query})
+
+def product_list(request):
+    query = request.GET.get('q')  # Get the query from the URL
+    if query:
+        products = Product.objects.filter(product_name__icontains=query)  # Adjust based on your model's fields
+    else:
+        products = Product.objects.all()
+    
+    context = {
+        'products': products,
+        'query': query,
+    }
+    return render(request, 'products.html', context)
