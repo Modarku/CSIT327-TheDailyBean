@@ -16,13 +16,16 @@ def view_products(request):
 @user_passes_test(lambda u: u.is_staff)
 def add_product(request):
     if request.method == 'POST':
-        form = AddProductForm(request.POST)
+        form = AddProductForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('adminproductpage')
+        else:
+            print('hello: ', form.errors)
     else:
         form = AddProductForm()
     context = {
+        'is_authenticated': request.user.is_authenticated,
         'is_admin': request.user.is_staff,
         'products': Product.objects.all(),
         'form': form,
@@ -31,21 +34,14 @@ def add_product(request):
 
 @user_passes_test(lambda u: u.is_staff)
 def modify_product(request, pk):
-    products = Product.objects.all()
+    product = get_object_or_404(Product, id=pk)
     if request.method == 'POST':
-        form = ModifyProductForm(request.POST)
+        form = ModifyProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
-            # NEED PK
-            # product_id = request.POST.get('product_id')
-            product_name = request.POST.get('name')
-            product = products.objects.get(name=product_name)
-            product.name = form.cleaned_data['changed_name']
-            product.imageurl = form.cleaned_data['changed_imageurl']
-            product.description = form.cleaned_data['changed_description']
-            product.save()
+            form.save()
             return redirect('adminproductpage')
     else:
-        form = ModifyProductForm()
+        form = ModifyProductForm(instance=product)
     context = {
         'is_authenticated': request.user.is_authenticated,
         'is_admin': request.user.is_staff,
@@ -53,7 +49,7 @@ def modify_product(request, pk):
         'form': form,
     }
     # product = get_object_or_404(Product, pk=pk)
-    return render(request, 'admin/product_page.html', context)
+    return render(request, 'admin/modify_product.html', context)
    
 
 def view_product_reviews(request, pk):

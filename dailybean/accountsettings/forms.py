@@ -1,6 +1,7 @@
 # forms.py
 from django import forms
 from login.models import User
+from .models import Address
 from django.contrib.auth.forms import SetPasswordForm 
 
 class UserEditForm(forms.ModelForm):
@@ -8,8 +9,9 @@ class UserEditForm(forms.ModelForm):
         model = User
         fields = ['first_name', 'last_name', 'email']
 
-class ChangePasswordForm(SetPasswordForm):
+class AddressForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['new_password', 'check_new_password'] 
-    
+        model = Address
+        fields = [
+            'name', 'street_number', 'street', 'city', 'state', 'country', 'additional_details'
+        ]

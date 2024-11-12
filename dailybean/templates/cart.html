@@ -1,10 +1,9 @@
 {% extends "_base.html" %}
 
+{% load static %}
+
 {% block title %}
     Add Products
-{% endblock %}
-
-{% block head %}
 {% endblock %}
 
 {% block content %}
@@ -12,92 +11,70 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/styles.css">
-    <!-- Navbar -->
-    <header>
-        <nav>
-            <div class="logo">
-                <img src="static/images/logo.xpng" alt="The Daily Bean Logo">
-            </div>
-            <ul class="nav-links">
-                <li><a href="{% url 'homepage' %}">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">Subscriptions</a></li>
-                <li><a href="#">Contacts</a></li>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+    <div class="cart-page">
+
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li class="error-text">{{ message }}</li>
+                {% endfor %}
             </ul>
+        {% endif %}
 
-            <div class="nav-icons">
-                {% if is_authenticated %}
-                    <a href="" class="icon">
-                {% else %}
-                    <span class="welcome-text">Not Logged In</span>
-                    <a href="{% url 'login' %}" class="icon">
-                {% endif %}
-                        <img src="/static/images/account-icon.png" alt="accounts">
-                    </a>
-                <span>
-                    {% if is_admin %}
-                        <a href="{% url 'adminproductpage' %}" class="icon">PRODUCT PAGE</a>
-                    {% else %}
-                        <a href="{% url 'cartpage' %}">🛒</a>
-                    {% endif %}
-                </span>
+        <form action="{% url 'payment' %}" method="POST">
+            {% csrf_token %}
+            <div style="margin: 20px; display: flex; justify-content: space-between;">
+                <h1>CART PAGE</h1>
+                <button class="btn">Proceed to Payment</button>
             </div>
-        </nav>
-    </header>
-    <h1>CART PAGE</h1>
-    <div>
-        <ul style="outline: auto; margin: 10px;">
-            {% for product in products %}
-                <li style="outline: auto;">
-                    <a href="{% url 'modifyproduct' product.id %}">
-                        {{ product.name }}
-                    </a><br>
-                    Rating: {{ product.total_rating }}<br>
-                    Description: {{ product.description }}<br>
-                    Date Created: {{ product.created_at }}
-                </li>
-                <hr>
-            {% endfor %}
-        </ul>
-    </div>
-{% endblock %}
-
-{% block footer %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/styles.css">
-
-    <footer class="footer-section">
-        <div class="footer-logo">
-            <h3>The Daily Bean</h3>
-            <p>Sip. Savor. Repeat.</p>
-        </div>
-        <div class="footer-links">
+            
             <div>
-                <h4>Information</h4>
-                <a href="#">About</a>
-                <a href="#">Products</a>
-                <a href="#">Subscriptions</a>
-                <a href="#">Blog</a>
-            </div>
-            <div>
-                <h4>Company</h4>
-                <a href="#">Community</a>
-                <a href="#">Careers</a>
-            </div>
-            <div>
-                <h4>Contact</h4>
-                <a href="#">Support</a>
-                <a href="#">Help Center</a>
-                <a href="#">Pricing</a>
+                <div class="order-list">
+                    {% for order in orders %}
+                        {% if order.product.is_available %}
+                            <div class="order-item">
+                                <input type="checkbox" value="{{ order.id }}" name="checkout-box" style="width: 20px; height: 20px; align-self: center;" checked>
+                                <div style="align-self: center; display: flex;">
+                                    <img class="order-img" src="{{ order.product.product_image.url }}" alt="{{ order.product.product_name }}">
+                                    <h4 style="align-self: center; margin-left: 10px;">{{ order.product.product_name }}</h4>
+                                </div>
+                                
+                                <p class="product-price" style="align-self: center;">Price: ${{ order.product.price }}</p>
+                                
+                                <h4 style="align-self: center;">Qty: {{ order.product_amount }}</h4>
+                                <p class="product-price" style="align-self: center;">Total: ${{ order.total }}</p>
+                                <img style="align-self: center;" src="{% static 'images/trash-icon.png' %}" data-order-id="{{ order.id }}" onclick="deleteOrder(this.dataset.orderId)">
+                            </div>    
+                        {% endif %}
+                    {% empty %}
+                        <p>Nothing in the cart yet...</p>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2024 All Rights Reserved | Terms of Use | The Daily Bean</p>
-        </div>
-    </footer>
+    </form>
 
+    <script>
+        function deleteOrder(orderId) {
+            if (confirm("Are you sure you want to delete this order?")) {
+                fetch(`/cart/delete-order/${orderId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}', 
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete the order. Please try again.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    </script>
+    
 {% endblock %}

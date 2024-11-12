@@ -1,16 +1,9 @@
 {% extends "_base.html" %}
 
+{% load static %}
+
 {% block title %}
     The Daily Bean
-{% endblock %}
-
-
-{% block head %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/styles.css">
 {% endblock %}
 
 {% block content %}
@@ -18,24 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/styles.css">
-    <header>
-        <nav>
-            <div class="logo">
-                <img src="../static/images/logo.png" alt="The Daily Bean Logo">
-            </div>
-            <ul class="nav-links">
-                <li><a href="../../">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">Subscriptions</a></li>
-                <li><a href="#">Contacts</a></li>
-            </ul>
-            <div class="nav-icons">
-                <a href="" class="icon"><img src="../static/images/account-icon.png" alt="accounts"></a>
-                <span><a href="#">🛒</a></span>
-            </div>
-        </nav>
-    </header>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     <section class="account-info-section">
         <h2>Account Information</h2>
@@ -108,39 +84,91 @@
             <form method="POST" onsubmit="return confirmChangePassword();">
                 {% csrf_token %}
                 {{ password_form.non_field_errors }}
-
-                <label for="new-password">Password:</label>
-                {{ password_form.new_password.errors }}
-                {{ password_form.new_password }}
-
-                <label for="confirm-password">Re-enter Password:</label>
-                {{ password_form.check_new_password.errors }}
-                {{ password_form.check_new_password }}
-
+                {{ password_form.as_p }}
                 <button type="submit" name="change_password" class="btn change-password-btn">Change Password</button>
             </form>
         </div>
     </section>
 
-{% endblock %}
-
-{% block footer %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/styles.css">
-
-    <!-- Footer -->
-    <footer class="footer-section">
-        <div class="footer-logo">
-            <h3>The Daily Bean</h3>
-            <p>Sip, Savor, Repeat.</p>
+    <!-- Address Section -->
+    {% for message in messages %}
+        <ul>
+            {% if 'msg_add_address' in message.tags %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                    <li class="success-text">
+                {% else %}
+                    <li class="error-text">
+                {% endif %}
+                {{ message }}</li>
+            {% endif %}
+        </ul>
+    {% endfor %}
+    <section class="address-section">
+        <div style="display: flex;">
+            <!-- Address Dropdown -->
+            <div class="address-dropdown">
+                <h2>Address</h2>
+                <div style="display: flex; justify-content: space-between;">
+                    <label for="address-select">Select Default Address:</label>
+                </div>
+                <select id="address-select">
+                    <option value="">-- Select Address --</option>
+                </select>
+                <button id="toggle-form" class="btn">Switch to Edit Address</button>
+            </div>
+    
+            <!-- Add Address Form -->
+            <form method="POST" style="flex-grow: 1;" class="address-form" id="add-address-form">
+                <h2>Add Address:</h2>
+                {% csrf_token %}
+                
+                <label for="address-name">Name:</label>
+                <input type="text" id="address-name" name="name" value="{{ address_form.name.value|default:'' }}" placeholder="Name" required>
+        
+                <label>Address:</label>
+                <input type="text" id="street-number" name="street_number" value="{{ address_form.street_number.value|default:'' }}" placeholder="Street Number">
+                <input type="text" id="street" name="street" value="{{ address_form.street.value|default:'' }}" placeholder="Street">
+                <input type="text" id="city" name="city" value="{{ address_form.city.value|default:'' }}" placeholder="City" required>
+                <input type="text" id="state" name="state" value="{{ address_form.state.value|default:'' }}" placeholder="State/Province/Region">
+                <input type="text" id="country" name="country" value="{{ address_form.country.value|default:'' }}" placeholder="Country" required>
+        
+                <label for="additional-details">Additional Details:</label>
+                <textarea id="additional-details" name="additional_details" placeholder="Details">{{ address_form.additional_details.value|default:'' }}</textarea>
+                
+                <button type="submit" name="add_address" class="btn add-address-btn">Add Address</button>
+            </form>
         </div>
-        <div class="footer-bottom">
-            <p>2024 © All Rights Reserved | Terms of Use | The Daily Bean</p>
+    </section>
+
+    <!-- Current Subscriptions Section -->
+    <section class="subscriptions-section">
+        <h2>Current Subscriptions</h2>
+        <p>No subscriptions yet... :(</p>
+    </section>
+
+    <!-- Payment History Section -->
+    <section class="payment-history-section">
+        <h2>Payment History</h2>
+        <div class="order-list">
+            {% for order in orders %}
+                {% if order.product.is_available %}
+                    <div class="order-item">
+                        <div style="align-self: center; display: flex;">
+                            <img class="order-img" src="{{ order.product.product_image.url }}" alt="{{ order.product.product_name }}">
+                            <h4 style="align-self: center; margin-left: 10px;">{{ order.product.product_name }}</h4>
+                        </div>
+                        
+                        <p class="product-price" style="align-self: center;">Price: ${{ order.product.price }}</p>
+                        
+                        <h4 style="align-self: center;">Qty: {{ order.product_amount }}</h4>
+                        <p class="product-price" style="align-self: center;">Date purchased: {{ order.date_paid|date:"m/d/Y" }}</p>
+                    </div>    
+                {% endif %}
+            {% empty %}
+                <p>Nothing bought yet... :(</p>
+            {% endfor %}
         </div>
-    </footer>
+    </section>
 
     <script>
         function confirmEditUser() {
@@ -149,5 +177,12 @@
         function confirmChangePassword() {
             return confirm("Are you sure you want to change your password?");
         }
+
+        function confirmEditAddress() {
+            return confirm("Are you sure you want to change your address?");
+        }
+
     </script>
+
 {% endblock %}
+

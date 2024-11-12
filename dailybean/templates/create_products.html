@@ -1,15 +1,9 @@
 {% extends "_base.html" %}
 
+{% load static %}
+
 {% block title %}
     The Daily Bean - Create Product
-{% endblock %}
-
-{% block head %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/styles.css">
 {% endblock %}
 
 {% block content %}
@@ -17,64 +11,33 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/styles.css">
-    <!-- Navbar -->
-    <header>
-        <nav>
-            <div class="logo">
-                <img src="../static/images/logo.png" alt="The Daily Bean Logo">
-            </div>
-            <ul class="nav-links">
-                <li><a href="home.html">Home</a></li>
-                <li><a href="product.html">Products</a></li>
-                <li><a href="#">Subscriptions</a></li>
-                <li><a href="#">Contacts</a></li>
-            </ul>
-
-            <div class="nav-icons">
-                {% if is_authenticated %}
-                    <a href="account/" class="icon">
-                {% else %}
-                    <span class="welcome-text">Not Logged In</span>
-                    <a href="login/" class="icon">
-                {% endif %}
-                <img src="../static/images/account-icon.png" alt="accounts"></a>
-                <span><a href="#">🛒</a></span>
-            </div>
-        </nav>
-    </header>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     <body>
-        <!-- Create Product Container -->
         <div class="create-product-container">
             <h1>Create Product</h1>
     
             <form class="product-form" action="#" method="POST" enctype="multipart/form-data">
-                <!-- Product Name -->
                 <div class="form-group">
                     <label for="product-name">Product Name:</label>
                     <input type="text" id="product-name" name="product-name" placeholder="Name" required>
                 </div>
     
-                <!-- Product Description -->
                 <div class="form-group">
                     <label for="product-description">Product Description:</label>
                     <textarea id="product-description" name="product-description" rows="4" placeholder="Description" required></textarea>
                 </div>
-    
-                <!-- Ingredients -->
+
                 <div class="form-group">
                     <label for="ingredients">Ingredients:</label>
                     <textarea id="ingredients" name="ingredients" rows="3" placeholder="Press enter to add a bullet point"></textarea>
                 </div>
-    
-                <!-- Shelf Life -->
+
                 <div class="form-group">
                     <label for="shelf-life">Shelf Life:</label>
                     <textarea id="shelf-life" name="shelf-life" rows="2" placeholder="Add shelf life details"></textarea>
                 </div>
-    
-                <!-- Product Image Upload -->
+
                 <div class="form-group">
                     <label>Upload Product Image:</label>
                     <div class="image-upload">
@@ -85,8 +48,7 @@
                         </label>
                     </div>
                 </div>
-    
-                <!-- Price and Stock -->
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="product-price">Product Price:</label>
@@ -98,51 +60,9 @@
                         <input type="number" id="product-stock" name="product-stock" placeholder="Stock" required>
                     </div>
                 </div>
-    
-                <!-- Create Product Button -->
+
                 <button type="submit" class="create-product-btn">Create Product</button>
             </form>
         </div>
     </body>
-
-
-{% endblock %}
-
-{% block footer %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/styles.css">
-
-    <footer class="footer-section">
-        <div class="footer-logo">
-            <h3>The Daily Bean</h3>
-            <p>Sip. Savor. Repeat.</p>
-        </div>
-        <div class="footer-links">
-            <div>
-                <h4>Information</h4>
-                <a href="#">About</a>
-                <a href="#">Products</a>
-                <a href="#">Subscriptions</a>
-                <a href="#">Blog</a>
-            </div>
-            <div>
-                <h4>Company</h4>
-                <a href="#">Community</a>
-                <a href="#">Careers</a>
-            </div>
-            <div>
-                <h4>Contact</h4>
-                <a href="#">Support</a>
-                <a href="#">Help Center</a>
-                <a href="#">Pricing</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>© 2024 All Rights Reserved | Terms of Use | The Daily Bean</p>
-        </div>
-    </footer>
-
 {% endblock %}

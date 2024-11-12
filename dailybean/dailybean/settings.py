@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+import os 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +28,6 @@ SECRET_KEY = 'django-insecure-j08m@ng&jsl@k)6@26by3gknqf7&l$jfde1!xxsm!0phi=6)x1
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -44,6 +45,8 @@ INSTALLED_APPS = [
     'adminproductpage',
     'cartlist',
     'productpage',
+    'accountsettings',
+    'payment',
 ]
 
 MIDDLEWARE = [
@@ -129,6 +132,13 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# Image processing (Pillow)
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static', 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
