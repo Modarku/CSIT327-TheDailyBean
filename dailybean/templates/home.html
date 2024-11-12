@@ -12,7 +12,7 @@
         <div class="hero-text">
             <h1>Sip, Savor, Repeat.</h1>
             <p>50+ Products | 100+ Subscriptions</p>
-            <a href="{% url 'product_list' %}" class="btn">Explore Subscriptions →</a>
+            <a href="{% url 'product_list' %}?name=subscriptions" class="btn">Explore Subscriptions →</a>
         </div>
     </section>
 
@@ -22,7 +22,7 @@
             <h1>Newly Added Beans!</h1>
             <p>The Daily Bean ensures you will enjoy these new flavors!</p>
             <br>
-            <a href="{% url 'product_list' %}" class="btn">Explore Products →</a>
+            <a href="{% url 'product_list' %}?name=products" class="btn">Explore Products →</a>
         </div>
         <div class="products-container">
             <div class="product">

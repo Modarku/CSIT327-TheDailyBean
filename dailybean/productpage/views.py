@@ -7,13 +7,14 @@ from payment.models import Order
 
 def view_products(request):
     page = request.GET.get('page', 'products')
+    template = 'subscriptions.html' if page == 'subscriptions' else 'products.html'
 
     context = {
         'is_authenticated': request.user.is_authenticated,
         'is_admin': request.user.is_staff,
         'products': Product.objects.all(),
     }
-    return render(request, 'products.html', context)
+    return render(request, template, context)
 
 def product_detail(request, id):
     context = {

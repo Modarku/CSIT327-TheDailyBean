@@ -1,5 +1,7 @@
 {% extends "_base.html" %}
 
+{% load static %}
+
 {% block title %}
     The Daily Bean
 {% endblock %}
@@ -10,17 +12,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 {% endblock %}
 
 {% block content %}
-    <!-- Logo Section -->
-    <div class="logo-section">
-        <a href="../../"><img src="../static/images/logo.png" alt="The Daily Bean Logo" class="logo-img"></a>
-    </div>
 
     <!-- Signup Form Container -->
     <div class="signup-container">
+        <div class="logo-section">
+            <img src="{% static 'images/logo.png' %}" alt="The Daily Bean Logo" class="logo-img"></a>
+        </div>
         <h1>The Daily Bean</h1>
         <p class="welcome-text">It's been a while! <span>👋</span></p>
         
@@ -36,27 +37,30 @@
         <!-- Signup Form -->
         <form method="POST" class="signup-form">
             {% csrf_token %}
-            {{ form.as_p }}
-            <!-- <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter Your Email" required>
-
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter Your Username" required>
-
-            <label for="password">Password</label>
-            <div class="password-container">
-                <input type="password" id="password" name="password" placeholder="Enter Your Password" required>
-                <span class="password-toggle">👁️</span> 
+            {{ form.username.label_tag }} {{ form.username }}
+            {{ form.email.label_tag }} {{ form.email }}
+            {{ form.first_name.label_tag }} {{ form.first_name }}
+            {{ form.last_name.label_tag }} {{ form.last_name }}
+            
+            <div class="password-field">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+                <button type="button" id="toggle-password" class="toggle-password">
+                    <img src="{% static 'images/eye-icon.png' %}" alt="Show Password" class="show-password fa-eye">
+                </button>
             </div>
-
-            <label for="confirm-password">Re-enter Your Password</label>
-            <div class="password-container">
-                <input type="password" id="confirm-password" name="confirm-password" placeholder="Re-enter Your Password" required>
-                <span class="password-toggle">👁️</span>
-            </div> -->
-
+            
+            <div class="password-field">
+                {{ form.password_confirm.label_tag }}
+                {{ form.password_confirm }}
+                <button type="button" id="toggle-password-confirm" class="toggle-password">
+                    <img src="{% static 'images/eye-icon.png' %}" alt="Show Password" class="show-password fa-eye">
+                </button>
+            </div>
+            
             <button type="submit" class="btn signup-btn">Sign Up</button>
         </form>
+        
 
         <!-- Or With Section -->
         <div class="or-with">
@@ -69,21 +73,45 @@
 
         <!-- Sign-in Section -->
         <div class="signin-section">
-            <p>Already have an account? <a href="../../login/">Log In</a></p>
+            <p>Already have an account? <a href="{% url 'login' %}">Log In</a></p>
         </div>
     </div>
-{% endblock %}
 
-{% block footer %}
-    <!-- Footer -->
-    <footer class="footer-section">
-        <div class="footer-logo">
-            <h3>The Daily Bean</h3>
-            <p>Sip, Savor, Repeat.</p>
-            <br/>
-        </div>
-        <div class="footer-bottom">
-            <p>2024 © All Rights Reserved | Terms of Use | The Daily Bean</p>
-        </div>
-    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Toggle visibility for password field
+            const togglePasswordButton = document.getElementById('toggle-password');
+            const passwordField = document.querySelector('input[name="password"]');
+            const passwordIcon = togglePasswordButton.querySelector('i');
+    
+            togglePasswordButton.addEventListener('click', function () {
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    passwordIcon.classList.remove('fa-eye');
+                    passwordIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordField.type = 'password';
+                    passwordIcon.classList.remove('fa-eye-slash');
+                    passwordIcon.classList.add('fa-eye');
+                }
+            });
+    
+            // Toggle visibility for password_confirm field
+            const toggleConfirmButton = document.getElementById('toggle-password-confirm');
+            const confirmPasswordField = document.querySelector('input[name="password_confirm"]');
+            const confirmIcon = toggleConfirmButton.querySelector('i');
+    
+            toggleConfirmButton.addEventListener('click', function () {
+                if (confirmPasswordField.type === 'password') {
+                    confirmPasswordField.type = 'text';
+                    confirmIcon.classList.remove('fa-eye');
+                    confirmIcon.classList.add('fa-eye-slash');
+                } else {
+                    confirmPasswordField.type = 'password';
+                    confirmIcon.classList.remove('fa-eye-slash');
+                    confirmIcon.classList.add('fa-eye');
+                }
+            });
+        });
+    </script>
 {% endblock %}

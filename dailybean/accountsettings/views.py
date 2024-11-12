@@ -5,6 +5,9 @@ from .models import Address
 from payment.models import Order
 from django.contrib import messages
 from django.http import JsonResponse
+import logging
+
+logger = logging.getLogger(__name__)
 
 def account_view(request):
     user = request.user
@@ -34,10 +37,25 @@ def account_view(request):
         else:
             password_form = SetPasswordForm(user)
         
+        # Handle address creation
+        if 'add_address' in request.POST:
+            address_form = AddressForm(request.POST)
+            if address_form.is_valid():
+                address = address_form.save(commit=False)
+                address.user = request.user
+                address.save()
+                messages.success(request, 'Address has been added.', extra_tags='msg_add_address')
+                return redirect('account')
+            else:
+                messages.error(request, address_form.errors, extra_tags='msg_add_address')
+        else:
+            address_form = AddressForm()
     else:
         form = UserEditForm(instance=user)
         password_form = SetPasswordForm(user)
+        address_form = AddressForm()
 
+    addresses = Address.objects.filter(user=request.user)
     orders = Order.objects.filter(user=request.user, date_paid__isnull=False)
 
     context = {
@@ -45,6 +63,8 @@ def account_view(request):
         'user': request.user,
         'form': form,
         'password_form': password_form,
+        'address_form': address_form,
+        'addresses': addresses,
         'orders': orders,
     }
 
@@ -52,19 +72,31 @@ def account_view(request):
 
 # Address Views
 def edit_address(request, address_id):
+    user = request.user
     address = get_object_or_404(Address, id=address_id)
-    
-    if request.method == 'POST':
-        form = AddressForm(request.POST, instance=address)
-        if form.is_valid():
-            form.save()
-            return redirect('account') 
-    else:
-        form = AddressForm(instance=address)
+    form = UserEditForm(instance=user)
+    password_form = SetPasswordForm(user)
+    address_form = AddressForm()
 
+    if request.method == 'POST':
+        address.name = request.POST.get('name')
+        address.street_number = request.POST.get('street_number')
+        address.street = request.POST.get('street')
+        address.city = request.POST.get('city')
+        address.state = request.POST.get('state')
+        address.country = request.POST.get('country')
+        address.additional_details = request.POST.get('additional_details')
+        address.save()
+        
+        messages.success(request, 'Address updated successfully.')
+        return redirect('account')
+    
     context = {
+        'is_authenticated': request.user.is_authenticated,
+        'user': request.user,
         'form': form,
-        'address': address,
+        'password_form': password_form,
+        'address_form': address_form,
     }
     
     return render(request, 'accounts.html', context)
