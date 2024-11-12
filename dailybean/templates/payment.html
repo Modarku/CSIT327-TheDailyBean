@@ -1,0 +1,156 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}
+    The Daily Bean - Payment
+{% endblock %}
+
+{% block content %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <div class="checkout-container">
+        <h1 style="margin: 20px;" >CHECKOUT</h1>
+
+        <!-- Shipping Information Section -->
+        <section class="shipping-info">
+            <div style="display: flex;">
+                <div class="address-dropdown">
+                    <h2>Address</h2>
+                    <div style="display: flex; justify-content: space-between; margin: 10px;">
+                        <label for="address-select">Address:</label>
+                    </div>
+                    <select id="address-select" onchange="setDefaultAddress()">
+                        <option value="">-- Select Address on the Account Tab --</option>
+                        {% for address in addresses %}
+                            <option value="{{ address.id }}" {% if address.is_selected %} selected {% endif %}>
+                                {{ address.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Review Section -->
+        <section class="order-review">
+            <h2>Order Review</h2>
+            {% for order in orders %}
+                {% if order.product.is_available %}
+                    <div class="order-item">
+                        <div style="align-self: center; display: flex;">
+                            <img class="order-img" src="{{ order.product.product_image.url }}" alt="{{ order.product.product_name }}">
+                            <h4 style="align-self: center; margin-left: 10px;">{{ order.product.product_name }}</h4>
+                        </div>
+                        
+                        <p class="product-price" style="align-self: center;">Price: ${{ order.product.price }}</p>
+                        
+                        <h4 style="align-self: center;">Qty: {{ order.product_amount }}</h4>
+                        <p class="product-price" style="align-self: center;">Total: ${{ order.total }}</p>
+                        <img style="align-self: center;" src="{% static 'images/trash-icon.png' %}" data-order-id="{{ order.id }}" onclick="deleteOrder(this.dataset.orderId)">
+                    </div>    
+                {% endif %}
+            {% empty %}
+                <p>Nothing ordered</p>
+            {% endfor %}
+            
+        </section>
+
+        <!-- Order Summary Section -->
+        <section class="order-summary">
+            <h2>Order Summary</h2>
+        
+            {% with subtotal=0 %}
+                {% for order in orders %}
+                    {% with subtotal=subtotal|add:order.total %}
+                        {% if forloop.last %}
+                            <div class="summary-line">
+                                <span>Subtotal</span>
+                                <span>₱{{ subtotal }}</span>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Shipping</span>
+                                <span>₱100.00</span>
+                            </div>
+                        
+                            <div class="summary-line total">
+                                <span>Total</span>
+                                <span>₱{{ subtotal|add:100 }}</span> <!-- Adding the shipping cost -->
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endfor %}
+            {% endwith %}
+
+            <form method="POST" action="{% url 'confirm_payment' %}" onsubmit="return validateAddressSelection()">
+                {% csrf_token %}
+                {% for order in orders %}
+                    <input type="hidden" name="order_ids" value="{{ order.id }}">
+                {% endfor %}
+                <button type="submit" class="btn confirm" style="float: right;">Confirm</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        function setDefaultAddress() {
+            const addressId = document.getElementById('address-select').value;
+            
+            fetch(`/account/set-default-address/${addressId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            }).then(response => {
+                if (response.ok) {
+                    console.log("Default address updated.");
+                }
+            });
+        }
+
+        function validateAddressSelection() {
+            const addressSelect = document.getElementById('address-select');
+            if (!addressSelect.value) {
+                alert("Please select an address before proceeding.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+{% endblock %}
+
+        <!-- Payment Methods Section -->
+        <section class="payment-methods">
+            <h2>Payment Methods</h2>
+            <div class="payment-tabs">
+                <button class="tab-button active">Card</button>
+                <button class="tab-button">Paypal</button>
+                <button class="tab-button">iDeal</button>
+                <button class="tab-button">Others</button>
+            </div>
+
+            <div class="payment-form">
+                <div class="form-row">
+                    <input type="text" placeholder="Card Number" required>
+                    <input type="text" placeholder="Card Holder" required>
+                </div>
+                <div class="form-row">
+                    <input type="month" placeholder="Expiry Date" required>
+                    <input type="text" placeholder="CVV" required>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox"> Save this card</label>
+                </div>
+                <button class="confirm-btn">Confirm</button>
+            </div>
+        </section>
+
+        <div class="form-row">
+            <input type="text" placeholder="Promo Code">
+        </div>

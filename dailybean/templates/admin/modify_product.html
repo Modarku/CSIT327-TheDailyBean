@@ -1,0 +1,159 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Add Products
+{% endblock %}
+
+{% block content %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <div style="display: flex; justify-content: space-between;">
+        <div style="padding: 10px;">
+            {% if is_admin %}
+            <h1>MODIFY PRODUCT</h1>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+            
+                <label for="product_name">Product Name:</label>
+                {{ form.product_name.errors }}
+                {{ form.product_name }}
+            
+                <label for="product_description">Description:</label>
+                {{ form.product_description.errors }}
+                {{ form.product_description }}
+            
+                <label for="product_ingredients">Ingredients:</label>
+                {{ form.product_ingredients.errors }}
+                {{ form.product_ingredients }}
+            
+                <label for="product_shelflife">Shelf Life:</label>
+                {{ form.product_shelflife.errors }}
+                {{ form.product_shelflife }}
+            
+                <label for="product_image">Image:</label>
+                {{ form.product_image.errors }}
+                {{ form.product_image }}
+            
+                <label for="stock">Stock:</label>
+                {{ form.stock.errors }}
+                {{ form.stock }}
+            
+                <label for="price">Price:</label>
+                {{ form.price.errors }}
+                {{ form.price }}
+            
+                <button type="submit" class="btn signup-btn">Modify Product</button>
+            </form>
+            {% else %}
+                <h2>get out</h2>
+            {% endif %}
+            
+        </div>
+    
+        <div style="width: 950px ;padding: 10px; margin: 20px 5%;">
+            <h1 class="product-detail" >PRODUCT PREVIEW</h1>
+            <div class="product-detail">
+                <div class="product-image">
+                    <img id="preview-image" src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
+                </div>
+        
+                <div class="product-info">
+                    <h1 id="preview-name"></h1>
+                    <div class="product-rating">
+                        <p>No Ratings</p>
+                    </div>
+                    <h3>Description</h3>
+                    <p id="preview-description"></p>
+        
+                    <h4>Ingredients:</h4>
+                    <p id="preview-ingredients"></p>
+        
+                    <h4>Shelf Life:</h4>
+                    <p id="preview-shelf-life"></p>
+        
+                    <!-- Quantity Selector -->
+                    <div class="quantity-selector">
+                        <label for="quantity">Qty:</label>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="">
+                    </div>
+        
+                    <h4>Price:</h4>
+                    <p id="preview-price"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <script>
+        // Select form fields and preview elements
+        const productNameInput = document.getElementById('id_product_name');
+        const descriptionInput = document.getElementById('id_product_description');
+        const ingredientsInput = document.getElementById('id_product_ingredients');
+        const shelfLifeInput = document.getElementById('id_product_shelflife');
+        const priceInput = document.getElementById('id_price');
+        const imageInput = document.getElementById('id_product_image');
+        
+        const previewName = document.getElementById('preview-name');
+        const previewDescription = document.getElementById('preview-description');
+        const previewIngredients = document.getElementById('preview-ingredients');
+        const previewShelfLife = document.getElementById('preview-shelf-life');
+        const previewPrice = document.getElementById('preview-price');
+        const previewImage = document.getElementById('preview-image');
+    
+        // Helper function to format text with <br> for line breaks
+        function formatTextWithLineBreaks(text) {
+            return text.replace(/\n/g, '<br>');
+        }
+    
+        // Initialize preview with existing values
+        previewName.textContent = productNameInput.value;
+        previewDescription.innerHTML = formatTextWithLineBreaks(descriptionInput.value);
+        previewIngredients.innerHTML = formatTextWithLineBreaks(ingredientsInput.value);
+        previewShelfLife.textContent = shelfLifeInput.value;
+        previewPrice.textContent = `$${priceInput.value}`;
+    
+        // Set image if available
+        if (imageInput.files.length === 0) {
+            previewImage.src = "{{ product.product_image.url }}";
+        }
+    
+        // Update preview on input by replacing content directly
+        productNameInput.addEventListener('input', () => {
+            previewName.textContent = productNameInput.value;
+        });
+        descriptionInput.addEventListener('input', () => {
+            previewDescription.innerHTML = formatTextWithLineBreaks(descriptionInput.value);
+        });
+        ingredientsInput.addEventListener('input', () => {
+            previewIngredients.innerHTML = formatTextWithLineBreaks(ingredientsInput.value);
+        });
+        shelfLifeInput.addEventListener('input', () => {
+            previewShelfLife.textContent = shelfLifeInput.value;
+        });
+        priceInput.addEventListener('input', () => {
+            previewPrice.textContent = `$${priceInput.value}`;
+        });
+    
+        // Update image preview on change
+        imageInput.addEventListener('change', function() {
+            const file = imageInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+    
+
+{% endblock %}
