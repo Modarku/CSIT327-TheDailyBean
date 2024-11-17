@@ -929,6 +929,12 @@ section {
     object-fit: cover;
 }
 
+.comment-rating {
+    height: 20px;
+    margin: 0;
+    object-fit: cover;
+}
+
 .product-star {
     height: 20px !important;
     width: 20px !important;
@@ -938,6 +944,31 @@ section {
 .product-price {
     color: #b07d52;
     font-weight: bold;
+}
+
+.star-rating {
+    direction: rtl;
+    display: inline-flex;
+    justify-content: flex-start;
+}
+.star-rating input {
+    display: none;
+}
+.star-rating label {
+    font-size: 30px;
+    color: gray;
+    cursor: pointer;
+}
+.star-rating input:checked ~ label {
+    color: gold;
+}
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: gold;
+}
+.star-rating input:checked ~ label:hover,
+.star-rating input:checked ~ label:hover ~ label {
+    color: gold;
 }
 
 .order-list {

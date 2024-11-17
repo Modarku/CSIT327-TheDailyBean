@@ -10,13 +10,14 @@ from django.template import loader
 # Create your views here.
 
 def view_cart(request):
-    orders = Order.objects.filter(user=request.user, date_paid__isnull=True).select_related('product')
-
     context = {
         'is_authenticated': request.user.is_authenticated,
         'is_admin': request.user.is_staff,
-        'orders' : orders,
     }
+
+    if(request.user.is_authenticated):
+        orders = Order.objects.filter(user=request.user, date_paid__isnull=True).select_related('product')
+        context['orders'] = orders
 
     return render(request, 'cart.html', context)
 
