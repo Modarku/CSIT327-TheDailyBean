@@ -29,6 +29,7 @@ urlpatterns = [
     path('cart/', include('cartlist.urls')),
     path('products/', include('productpage.urls')),
     path('payment/', include('payment.urls')),
+    path('favorites/', include('favorites.urls')),
 ]
 
 if settings.DEBUG:

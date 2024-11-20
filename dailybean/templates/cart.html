@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     
-    <div class="cart-page">
+    <div class="cart-page" style="max-width: 1200px; margin: auto;">
 
         {% if messages %}
             <ul>
@@ -53,8 +53,15 @@
                     {% endfor %}
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+        
+        <br><hr><br>
+        <!-- To Favorites Button -->
+        <a href="{% url 'user_favorites' %}" style="margin-left: 50px">
+            <button id="btn" class="btn">Favorites</button>
+        </a>
+    </div>
+
 
     <script>
         function deleteOrder(orderId) {

@@ -1,0 +1,52 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}
+    The Daily Bean
+{% endblock %}
+
+{% block content %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=Fjalla+One&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <section>
+        <h1>Your Favorited Products</h1>
+        <ul>
+            {% if favorites %}
+                {% for favorite in favorites %}
+                    <li>
+                        <a href="{% url 'product_detail' favorite.product.id %}">{{ favorite.product.name }}</a>
+                        
+                        <div class="order-item">
+                            <div style="align-self: center; display: flex;">
+                                <img class="order-img" src="{{ favorite.product.product_image.url }}" alt="{{ favorite.product.product_name }}">
+                                <h4 style="align-self: center; margin-left: 10px;">{{ favorite.product.product_name }}</h4>
+                            </div>
+                            
+                            <p class="product-price" style="align-self: center;">Price: ${{ favorite.product.price }}</p>
+                            
+                            <form action="{% url 'toggle_favorite' favorite.product.id %}" method="post" style="align-self: center;">
+                                {% csrf_token %}
+                                <button type="submit" style="background: none; border: none; cursor: pointer;">
+                                    {% if favorite.product in request.user.favorites.all %}
+                                        <img src="/static/images/remove-favorite-icon.png" alt="Remove from Favorites">
+                                    {% else %}
+                                        <img src="/static/images/add-favorite-icon.png" alt="Add to Favorites">
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>    
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p>You haven't favorited any products yet.</p>
+            {% endif %}
+        </ul>
+    </section>
+    
+    
+{% endblock %}
