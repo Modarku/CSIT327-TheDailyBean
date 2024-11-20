@@ -51,11 +51,20 @@
                         
                         <h4 style="align-self: center;">Qty: {{ order.product_amount }}</h4>
                         <p class="product-price" style="align-self: center;">Total: ${{ order.total }}</p>
-                        <img style="align-self: center;" src="{% static 'images/trash-icon.png' %}" data-order-id="{{ order.id }}" onclick="deleteOrder(this.dataset.orderId)">
                     </div>    
                 {% endif %}
-            {% empty %}
-                <p>Nothing ordered</p>
+            {% endfor %}
+
+            {% for order in subscriptions %}
+                {% if order.product.is_available %}
+                    <div class="order-item">
+                        <div style="align-self: center; display: flex;">
+                            <img class="order-img" src="{{ order.product.product_image.url }}" alt="{{ order.product.product_name }}">
+                            <h4 style="align-self: center; margin-left: 10px;">{{ order.product.product_name }}</h4>
+                        </div>
+                        <h4 style="align-self: center;">Type: {{ order.subscription_type }}</h4>
+                    </div>    
+                {% endif %}
             {% endfor %}
             
         </section>
@@ -63,7 +72,8 @@
         <!-- Order Summary Section -->
         <section class="order-summary">
             <h2>Order Summary</h2>
-        
+            
+            {% if orders%}
             {% with subtotal=0 %}
                 {% for order in orders %}
                     {% with subtotal=subtotal|add:order.total %}
@@ -86,7 +96,6 @@
                     {% endwith %}
                 {% endfor %}
             {% endwith %}
-
             <form method="POST" action="{% url 'confirm_payment' %}" onsubmit="return validateAddressSelection()">
                 {% csrf_token %}
                 {% for order in orders %}
@@ -94,6 +103,23 @@
                 {% endfor %}
                 <button type="submit" class="btn confirm" style="float: right;">Confirm</button>
             </form>
+            {% endif %}
+
+            {% if subscriptions %}
+                <div class="summary-line total">
+                    <span>Total</span>
+                    <span>₱{{ subscriptions.0.price }}</span>
+                </div>
+                <form method="POST" action="{% url 'confirm_subscription_payment' %}" onsubmit="return validateAddressSelection()">
+                    {% csrf_token %}
+                    {% for order in subscriptions %}
+                        <input type="hidden" name="order_ids" value="{{ order.id }}">
+                    {% endfor %}
+                    <button type="submit" class="btn confirm" style="float: right;">Confirm</button>
+                </form>
+            {% endif %}
+
+            
         </section>
     </div>
 

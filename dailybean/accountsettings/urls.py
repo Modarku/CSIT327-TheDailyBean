@@ -7,4 +7,5 @@ urlpatterns = [
     path('get-address/<int:address_id>/', views.get_address, name='get_address'),
     path('edit-address/<int:address_id>/', views.edit_address, name='edit_address'),
     path('delete-address/<int:address_id>/', views.delete_address, name='delete_address'),
+    path('cancel-subscription/<int:subscription_id>/', views.cancel_subscription, name='cancel_subscription'),
 ]

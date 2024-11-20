@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from home.models import Product, Review
+from django.utils import timezone
 from .forms import ReviewForm
+from home.models import Product, ProductSubscription, Review
 from payment.models import Order
 from django.http import JsonResponse
+import json
 
 # Create your views here.
 
@@ -65,6 +67,43 @@ def add_to_cart(request, product_id):
     )
 
     return redirect('product_list')
+
+@login_required
+def add_to_subscription(request):
+    
+    user = request.user
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            product_id_list = [int(pid) for pid in data.get('product_ids', '').split(',')]
+            
+            if len(product_id_list) == 1:
+                subscription_type = 'Onebean'
+                price = 349.00
+            elif len(product_id_list) == 5:
+                subscription_type = 'Weeklybean'
+                price = 999.00
+            else:
+                subscription_type = 'Choicebean'
+                price = 1299.00
+
+            for product_id in product_id_list:
+                product = get_object_or_404(Product, id=product_id)
+                
+                ProductSubscription.objects.create(
+                    user=user,
+                    product=product,
+                    subscription_type=subscription_type,
+                    price=price,
+                    next_monthly = timezone.now()
+                )
+                
+            return JsonResponse({'message': 'Subscription added successfully.'}, status=200)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 @csrf_exempt
 def delete_review(request, product_id, review_id):

@@ -1,27 +1,46 @@
 from django.shortcuts import render, redirect
 from .models import Order
 from accountsettings.models import Address
+from home.models import ProductSubscription
 from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 from django.contrib import messages
+from django.http import HttpResponse
 
 # Create your views here.
 def payment_view(request):
-    if request.method == 'POST':
-        order_ids = request.POST.getlist('checkout-box') 
-        orders = Order.objects.filter(id__in=order_ids)
+    try:
+        if request.method == 'POST':
+            order_ids = request.POST.getlist('checkout-box') 
+            orders = Order.objects.filter(id__in=order_ids)
 
-        addresses = Address.objects.filter(user=request.user)
-        context = {
-            'is_authenticated': request.user.is_authenticated,
-            'is_admin': request.user.is_staff,
-            'addresses': addresses,
-            'orders' : orders,
-        }
-
-        return render(request, 'payment.html', context)
-    else:
-        return redirect('cartpage')
+            addresses = Address.objects.filter(user=request.user)
+            context = {
+                'is_authenticated': request.user.is_authenticated,
+                'is_admin': request.user.is_staff,
+                'addresses': addresses,
+                'orders' : orders,
+            }
+            return render(request, 'payment.html', context)
+        else:
+            return redirect('cartlist')
+    except Exception as e:
+        return HttpResponse(f"Error: {e}")
     
+def subscription_payment_view(request):
+
+    subscriptions = ProductSubscription.objects.filter(user=request.user, is_active=False)
+
+    addresses = Address.objects.filter(user=request.user)
+    context = {
+        'is_authenticated': request.user.is_authenticated,
+        'is_admin': request.user.is_staff,
+        'addresses': addresses,
+        'subscriptions' : subscriptions,
+    }
+
+    return render(request, 'payment.html', context)
+
 def confirm_payment(request):
     if request.method == 'POST':
         order_ids = request.POST.getlist('order_ids') 
@@ -31,7 +50,23 @@ def confirm_payment(request):
             return redirect('success') 
         except Exception as e:
             messages.error(request, f"An error occurred while processing your payment. {str(e)}")
-            return redirect('payment')  
+            return redirect('payment')
+
+def confirm_subscription_payment(request):
+    if request.method == 'POST':
+        subscription_ids = request.POST.getlist('order_ids') 
+        try:
+            subscriptions = ProductSubscription.objects.filter(id__in=subscription_ids, user=request.user, is_active=False)
+            
+            current_time = timezone.now()
+            new_next_monthly = current_time + relativedelta(months=+1)
+            subscriptions.update(next_monthly=new_next_monthly)
+            subscriptions.update(is_active=True)
+
+            return redirect('success') 
+        except Exception as e:
+            print(f"An error occurred while processing your payment. {str(e)}")
+            return redirect('subscription_payment')   
         
 def success_view(request):
     context = {

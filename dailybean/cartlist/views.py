@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse
-from home.models import Product
+from home.models import ProductSubscription
 from payment.models import Order
 from django.http import HttpResponse
 from django.template import loader
