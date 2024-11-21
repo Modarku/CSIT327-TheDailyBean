@@ -1,6 +1,7 @@
 {% extends "_base.html" %}
 
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}
     Product - {{ product.product_name }}
@@ -90,45 +91,203 @@
                         <button type="submit" class="add-to-cart-btn">Add to Cart</button>
                     </form>
                     {% endif %}
+                    <br><hr><br>
+                    {% if user.is_authenticated %}
+                        <form action="{% url 'toggle_favorite' product.id %}" method="post">
+                            {% csrf_token %}
+                            {% if is_favorited %}
+                                <button type="submit" class="btn">Remove from Favorites</button>
+                            {% else %}
+                                <button type="submit" class="btn">Add to Favorites</button>
+                            {% endif %}
+                        </form>
+                    {% else %}
+                        <p><a href="{% url 'login' %}">Log in</a> to favorite this product.</p>
+                    {% endif %}
                 </div>
             </div>
     
             <!-- Comments Section -->
             <div class="comments-section">
-                <h2>Comments(Temporary)</h2>
+                <h2>Comments</h2>
     
                 <!-- User Comment -->
                 <div class="comment-box">
-                    <div class="comment-user">You</div>
-                    <div class="rating">★★★★★</div>
-                    <textarea placeholder="Leave a comment..."></textarea>
-                    <button class="comment-btn">Comment</button>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="comment-author">You</div>
+                        <div>
+                            <label for="rating">Your Rating:</label><br>
+                            <div class="star-rating">
+                                <input type="radio" name="rating" id="star5" value="5" {% if form.rating.value == 5 %}checked{% endif %}>
+                                <label for="star5">★</label>
+                                <input type="radio" name="rating" id="star4" value="4" {% if form.rating.value == 4 %}checked{% endif %}>
+                                <label for="star4">★</label>
+                                <input type="radio" name="rating" id="star3" value="3" {% if form.rating.value == 3 %}checked{% endif %}>
+                                <label for="star3">★</label>
+                                <input type="radio" name="rating" id="star2" value="2" {% if form.rating.value == 2 %}checked{% endif %}>
+                                <label for="star2">★</label>
+                                <input type="radio" name="rating" id="star1" value="1" {% if form.rating.value == 1 %}checked{% endif %}>
+                                <label for="star1">★</label>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="text">Your Review:</label><br>
+                            {{ form.text }}
+                        </div>
+                        <button type="submit" class="comment-btn">Comment</button>
+                    </form>
                 </div>
-    
+                
                 <!-- Other User Comments -->
                 <div class="comment-list">
+                    {% if reviews %}
+                    {% for review in reviews %}
                     <div class="comment">
                         <div class="comment-header">
-                            <div class="comment-author">John Doe</div>
-                            <div class="comment-rating">★★★★★</div>
+                            <div class="comment-author">{{ review.user.username }}</div>
+                            <div class="comment-rating">
+                                {% if user == review.user %}
+                                <img src="{% static 'images/trash-icon.png' %}"
+                                        id="delete-review" 
+                                        data-review-id="{{ review.id }}" 
+                                        data-product-id="{{ product.id }}"
+                                        onclick="deleteReview(this)">
+                                <!-- <img src="{% static 'images/edit-icon.png' %}" 
+                                        id="edit-review"
+                                        data-review-id="{{ review.id }}" 
+                                        data-product-id="{{ product.id }}"
+                                        onclick="toggleEditReview(this)"> -->
+                                {% endif %}
+                                {% if review.rating == 0 %}
+                                <p>No Ratings</p>
+                                {% else %}
+                                    <img src="/static/images/star.png" class="product-star">
+                                    {% if review.rating >= 2 %}
+                                    <img src="/static/images/star.png" class="product-star">
+                                    {% else %}
+                                    <img src="/static/images/empty_star.png" class="product-star">
+                                    {% endif %}
+                                    {% if review.rating >= 3 %}
+                                    <img src="/static/images/star.png" class="product-star">
+                                    {% else %}
+                                    <img src="/static/images/empty_star.png" class="product-star">
+                                    {% endif %}
+                                    {% if review.rating >= 4 %}
+                                    <img src="/static/images/star.png" class="product-star">
+                                    {% else %}
+                                    <img src="/static/images/empty_star.png" class="product-star">
+                                    {% endif %}
+                                    {% if review.rating >= 5 %}
+                                    <img src="/static/images/star.png" class="product-star">
+                                    {% else %}
+                                    <img src="/static/images/empty_star.png" class="product-star">
+                                    {% endif %}
+                                {% endif %}
+                            </div>
                         </div>
-                        <p>I was pleasantly surprised. This effective roast is subtle but really elevates the coffee.</p>
-                        <p><small>5 mins ago</small></p>
+                        <br>
+                        <div id="toggle-text-{{ review.id }}">
+                            <p>{{ review.text }}</p>
+                            <p><small>{{ review.date_created|timeago }}</small></p>
+                        </div>
+                        <div id="toggle-edit-{{ review.id }}" style="display: none;">
+                            <form method="post">
+                                {% csrf_token %}
+                                <textarea name="text">{{ review.text }}</textarea>
+                                <input type="hidden" name="rating" value="{{ review.rating }}" />
+                                <button type="submit" class="btn" data-review-id="{{ review.id }}" data-product-id="{{ product.id }}">
+                                    Save Comment
+                                </button>
+                            </form>
+                        </div>
                     </div>
+                    {% endfor %}
+                    {% else %}
+                        <p>No reviews yet for this product.</p>
+                    {% endif %}
     
-                    <div class="comment">
-                        <div class="comment-header">
-                            <div class="comment-author">Jane Doe</div>
-                            <div class="comment-rating">★★★★★</div>
-                        </div>
-                        <p>This dark roast has a bold flavor that is perfect for a powerful morning start!</p>
-                        <p><small>5 mins ago</small></p>
-                    </div>
                 </div>
     
                 <!-- Load More Comments Button -->
-                <button class="load-more-btn">Load More</button>
+                <!-- <button class="load-more-btn">Load More</button> -->
             </div>
         </div>
+    </body>
 
+    <script>
+        function toggleEditReview(element){
+            const reviewId = element.getAttribute("data-review-id");
+            const productId = element.getAttribute("data-product-id");
+            const form = document.getElementById("toggle-edit-" + reviewId);
+            const text = document.getElementById("toggle-text-" + reviewId);
+
+            console.log(`${form} ${text}`);
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+                text.style.display = 'none';
+            } else {
+                form.style.display = 'none';
+                text.style.display = 'block';
+            }
+        }
+
+        function editReview(element) {
+            const confirmation = confirm("Are you sure you want to edit this review?");
+            const reviewId = element.getAttribute("data-review-id");
+            const productId = element.getAttribute("data-product-id");
+            const form = document.getElementById("toggle-edit-" + reviewId);
+            const text = document.getElementById("toggle-text-" + reviewId);
+            
+            if (confirmation) {
+                fetch(`/products/${productId}/edit-review/${reviewId}/`, {
+                    method: 'POST',
+                    body: form,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                })
+                .then(response => {
+                    console.log('Full Response:', response);
+                    if (response.ok) {
+                        alert("Review edited successfully.");
+                        location.reload();
+                    } else {
+                        alert("Error editing review.", response);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+        function deleteReview(element) {
+            const confirmation = confirm("Are you sure you want to delete this review?");
+            const productId = element.getAttribute("data-product-id");
+            const reviewId = element.getAttribute("data-review-id");
+
+            if (confirmation) {
+                fetch(`/products/${productId}/delete-review/${reviewId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}', 
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    console.log('Full Response:', response);
+                    if (response.ok) {
+                        alert("Review deleted successfully.");
+                        location.reload();
+                    } else {
+                        alert("Error deleting review.", response);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+    </script>
 {% endblock %}

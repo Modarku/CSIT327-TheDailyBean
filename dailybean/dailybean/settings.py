@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'dailybean',
     'home',
     'signup',
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'productpage',
     'accountsettings',
     'payment',
+    'favorites',
 ]
 
 MIDDLEWARE = [

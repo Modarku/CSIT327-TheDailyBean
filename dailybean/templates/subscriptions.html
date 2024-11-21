@@ -29,7 +29,7 @@
                         <li><p>Pick one coffee bean of your choice</p></li>
                         <li><p>Free coffee mood chart</p></li>
                     </ul>
-                    <button class="btn">Buy now</button>
+                    <button id="btn-one-bean" class="btn" onclick="orderSubscription()" disabled>Pick one bean</button>
                 </div>
 
                 <div class="subscription-card">
@@ -39,10 +39,10 @@
                         <li><p>Pick five small packages of coffee beans of your choice</p></li>
                         <li><p>Free coffee notebook</p></li>
                     </ul>
-                    <button class="btn">Pick five beans</button>
+                    <button id="btn-weekly-bean" class="btn" onclick="orderSubscription()" disabled>Pick five beans</button>
                 </div>
 
-                <div class="subscription-card">
+                <!-- <div class="subscription-card">
                     <h2 style="font-size: 40px;">Daily Bean's Choice</h2>
                     <div style="display: flex;"><h2>₱1299</h2><p style=" align-self:flex-end ;"><strong>/mo</strong></p></div>
                     <ul>
@@ -50,7 +50,7 @@
                         <li><p>Free coffee mood chart</p></li>
                     </ul>
                     <button class="btn">Buy now</button>
-                </div>
+                </div> -->
             </div>
 
             <div style="display: flex; justify-content: center;">
@@ -59,8 +59,11 @@
                 {% endif %}
                 <!-- Search Bar -->
                 <div class="search-container">
-                    <input class="search-input" type="text" placeholder="What are you looking for?">
-                    <button class="search-btn">Search</button>
+                    <form action="{% url 'search_products' %}" method="get">
+                        <input class="search-input" type="text" name="q" placeholder="What are you looking for?">
+                        <input type="hidden" name="page" value="subscriptions.html">
+                        <button type="submit" class="search-btn">Search</button>
+                    </form>
                 </div>
             </div>
         </section>
@@ -103,6 +106,7 @@
                                 {% endif %}
                             </div>
                             <p class="product-price">${{ product.price }}</p>
+                            <input type="checkbox" id="checkbox-product-{{ product.id }}" data-product-id="{{ product.id }}" onclick="checkAmount(this)">
                         </div>
                     </a>    
                 {% endif %}
@@ -111,4 +115,58 @@
             {% endfor %}
         </div>
     </div>
+
+    <script>
+        var products = [];
+
+        function checkAmount(element){
+            const productId = element.getAttribute("data-product-id");
+            const checkbox = document.getElementById("checkbox-product-" + productId);
+            const btnOneBean = document.getElementById("btn-one-bean");
+            const btnWeeklyBean = document.getElementById("btn-weekly-bean");
+
+            if(checkbox.checked)
+                products.push(productId)
+            else
+                products = products.filter(item => item !== productId);
+            
+            if (products.length == 1)
+                btnOneBean.disabled = false
+            else
+                btnOneBean.disabled = true
+
+            if (products.length == 5)
+                btnWeeklyBean.disabled = false
+            else
+                btnWeeklyBean.disabled = true
+        }
+
+        function orderSubscription() {
+            const productString = products.join(", ");
+            alert(productString)
+
+            fetch(`/products/add-to-subscription/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', 
+                    'X-CSRFToken': '{{ csrf_token }}',  
+                },
+                body: JSON.stringify({ product_ids: productString })  
+            })
+            .then(response => {
+                console.log('Full Response:', response);
+                if (response.ok) {
+                    alert("Subscription added successfully.");
+                    window.location.href = '/payment/subscribe/';
+                } else {
+                    alert("Error adding subscription.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+
+    </script>
 {% endblock %}
