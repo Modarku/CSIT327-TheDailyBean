@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'productpage',
     'accountsettings',
     'payment',
+    'favorites',
 ]
 
 MIDDLEWARE = [

@@ -68,6 +68,27 @@ def add_to_cart(request, product_id):
 
     return redirect('product_list')
 
+def search_products(request):
+    query = request.GET.get('q') 
+    template = request.GET.get('page', 'products.html')
+
+    products = Product.objects.filter(product_name__icontains=query) if query else Product.objects.all()
+
+    return render(request, template, {'products': products, 'query': query})
+
+def product_list(request):
+    query = request.GET.get('q')
+    if query:
+        products = Product.objects.filter(product_name__icontains=query)
+    else:
+        products = Product.objects.all()
+    
+    context = {
+        'products': products,
+        'query': query,
+    }
+    return render(request, 'products.html', context)
+
 @login_required
 def add_to_subscription(request):
     

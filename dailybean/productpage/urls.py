@@ -8,4 +8,5 @@ urlpatterns = [
     path('add-to-subscription/', views.add_to_subscription, name='add_to_subscription'),
     path('<int:product_id>/delete-review/<int:review_id>/', views.delete_review, name='delete_review'),
     path('<int:product_id>/edit-review/<int:review_id>/', views.edit_review, name='edit_review'),
+    path('products/', views.search_products, name='search_products'),
 ]

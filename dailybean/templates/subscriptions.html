@@ -42,7 +42,7 @@
                     <button id="btn-weekly-bean" class="btn" onclick="orderSubscription()" disabled>Pick five beans</button>
                 </div>
 
-                <div class="subscription-card">
+                <!-- <div class="subscription-card">
                     <h2 style="font-size: 40px;">Daily Bean's Choice</h2>
                     <div style="display: flex;"><h2>₱1299</h2><p style=" align-self:flex-end ;"><strong>/mo</strong></p></div>
                     <ul>
@@ -50,7 +50,7 @@
                         <li><p>Free coffee mood chart</p></li>
                     </ul>
                     <button class="btn">Buy now</button>
-                </div>
+                </div> -->
             </div>
 
             <div style="display: flex; justify-content: center;">
@@ -59,8 +59,11 @@
                 {% endif %}
                 <!-- Search Bar -->
                 <div class="search-container">
-                    <input class="search-input" type="text" placeholder="What are you looking for?">
-                    <button class="search-btn">Search</button>
+                    <form action="{% url 'search_products' %}" method="get">
+                        <input class="search-input" type="text" name="q" placeholder="What are you looking for?">
+                        <input type="hidden" name="page" value="subscriptions.html">
+                        <button type="submit" class="search-btn">Search</button>
+                    </form>
                 </div>
             </div>
         </section>

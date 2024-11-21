@@ -36,6 +36,31 @@
             </div>
         </section>
 
+         <!-- Payment Methods Section -->
+         <section class="payment-methods">
+            <h2>Payment Methods</h2>
+
+            <!-- Card Payment Form -->
+            <div id="card-payment-form" class="payment-form active">
+                <div class="form-row">
+                    <input type="text" id="card-number" placeholder="Card Number" required>
+                    <input type="text" id="card-holder" placeholder="Card Holder" required>
+                </div>
+                <div class="form-row">
+                    <input type="month" id="expiry-date" placeholder="Expiry Date" required>
+                    <input type="text" id="cvv" placeholder="CVV" required>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="save-card"> Save this card</label>
+                </div>
+                <button class="confirm-btn" onclick="processCardPayment(event)">Confirm</button>
+            </div>
+            
+            <div class="form-row">
+                <input type="text" placeholder="Promo Code">
+            </div>
+        </section>
+
         <!-- Order Review Section -->
         <section class="order-review">
             <h2>Order Review</h2>
@@ -146,6 +171,43 @@
                 return false;
             }
             return true;
+        }
+
+        function showPaymentForm(paymentMethod) {
+            const forms = document.querySelectorAll('.payment-form');
+            forms.forEach(form => form.classList.remove('active'));
+            
+            if (paymentMethod === 'card') {
+                document.getElementById('card-payment-form').classList.add('active');
+            }
+        }
+
+        function processCardPayment(event) {
+            event.preventDefault();
+
+            const cardNumber = document.getElementById('card-number').value;
+            const cardHolder = document.getElementById('card-holder').value;
+            const expiryDate = document.getElementById('expiry-date').value;
+            const cvv = document.getElementById('cvv').value;
+            
+            if (!cardNumber || !cardHolder || !expiryDate || !cvv) {
+                alert('Please fill out all the card information before proceeding.');
+                return;
+            }
+
+            const cardRegex = /^[0-9]{16}$/;
+            const cvvRegex = /^[0-9]{3,4}$/;
+
+            if (!cardNumber.match(cardRegex)) {
+                alert('Invalid card number');
+                return;
+            }
+            if (!cvv.match(cvvRegex)) {
+                alert('Invalid CVV');
+                return;
+            }
+
+            alert("Card payment processed successfully!");
         }
     </script>
 

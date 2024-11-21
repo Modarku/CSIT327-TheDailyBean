@@ -60,8 +60,15 @@
                     {% endfor %}
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+        
+        <br><hr><br>
+        <!-- To Favorites Button -->
+        <a href="{% url 'user_favorites' %}" style="margin-left: 50px">
+            <button id="btn" class="btn">Favorites</button>
+        </a>
+    </div>
+    
 
     <script>
         function deleteOrder(orderId) {
