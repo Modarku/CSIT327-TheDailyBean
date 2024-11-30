@@ -14,51 +14,56 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     
     <div class="cart-page">
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
+        <ul>
+            {% for message in messages %}
+                {% if 'msg_stock' in message.tags %}
                     <li class="error-text">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+                {% endif %}
+            {% endfor %}
+        </ul>
 
-        <form action="{% url 'payment' %}" method="POST">
+        <form id="paymentForm" method="POST">
             {% csrf_token %}
             <div style="margin: 20px; display: flex; justify-content: space-between;">
                 <h1>CART PAGE</h1>
                 {% if is_authenticated %}
-                    <button class="btn">Proceed to Payment</button>
+                    <button class="btn" onclick="paymentProceed()">Proceed to Payment</button>
                 {% endif %}
             </div>
             
-            <div>
-                <div class="order-list">
-                    {% for order in orders %}
-                        {% if order.product.is_available %}
-                            <div class="order-item">
+            <div class="order-list">
+                {% for order in orders %}
+                    {% if order.product.is_available %}
+                        <div class="order-item">
+                            {% if order.product.stock > order.product_amount %}
                                 <input type="checkbox" value="{{ order.id }}" name="checkout-box" style="width: 20px; height: 20px; align-self: center;" checked>
-                                <div style="align-self: center; display: flex;">
-                                    <img class="order-img" src="{{ order.product.product_image.url }}" alt="{{ order.product.product_name }}">
-                                    <h4 style="align-self: center; margin-left: 10px;">{{ order.product.product_name }}</h4>
-                                </div>
-                                
-                                <p class="product-price" style="align-self: center;">Price: ${{ order.product.price }}</p>
-                                
-                                <h4 style="align-self: center;">Qty: {{ order.product_amount }}</h4>
-                                <p class="product-price" style="align-self: center;">Total: ${{ order.total }}</p>
-                                <img style="align-self: center;" src="{% static 'images/trash-icon.png' %}" data-order-id="{{ order.id }}" onclick="deleteOrder(this.dataset.orderId)">
-                            </div>    
-                        {% endif %}
-                    {% empty %}
-                            {% if is_authenticated %}
-                                <p>Nothing in the cart yet...</p>
                             {% else %}
-                                <p>You must login to view your cart!</p>
-                                <br>
-                                <a href="{% url 'login' %}" class="btn">Log in</a></li>
+                                <input type="checkbox" value="{{ order.id }}" name="checkout-box" style="width: 20px; height: 20px; align-self: center;" disabled>
                             {% endif %}
-                    {% endfor %}
-                </div>
+                            <div style="align-self: center; display: flex;">
+                                <img class="order-img" src="{{ order.product.product_image.url }}" alt="{{ order.product.product_name }}">
+                                <h4 style="align-self: center; margin-left: 10px;">{{ order.product.product_name }}</h4>
+                            </div>
+                            <p class="product-price" id="productPrice" data-value="{{ order.product.price }}" style="align-self: center;">Price: ${{ order.product.price }}</p>
+                            <input style="align-self: center; width: 60px;" type="number" name="order-quantity" 
+                                value="{{ order.product_amount }}" 
+                                min="1" 
+                                data-order-id="{{ order.id }}" 
+                                style="width: 50px; align-self: center;" 
+                                onchange="updateOrderQuantity(this)">
+                            <p class="product-price" id="totalPrice" data-value="{{ order.total }}" style="align-self: center;">Total: ${{ order.total }}</p>
+                            <img style="align-self: center;" src="{% static 'images/trash-icon.png' %}" data-order-id="{{ order.id }}" onclick="deleteOrder(this.dataset.orderId)">
+                        </div>    
+                    {% endif %}
+                {% empty %}
+                        {% if is_authenticated %}
+                            <p>Nothing in the cart yet...</p>
+                        {% else %}
+                            <p>You must login to view your cart!</p>
+                            <br>
+                            <a href="{% url 'login' %}" class="btn">Log in</a></li>
+                        {% endif %}
+                {% endfor %}
             </div>
         </form>
         
@@ -69,8 +74,44 @@
         </a>
     </div>
     
-
     <script>
+        function paymentProceed() {
+            const form = document.getElementById('paymentForm');
+            const paymentUrl = "{% url 'payment' %}";
+            form.action = paymentUrl;
+        }
+
+        function updateOrderQuantity(inputElement) {
+            const orderId = inputElement.dataset.orderId;
+            const newQuantity = inputElement.value; 
+            const totalPrice = document.getElementById('totalPrice')
+
+            const productPrice = document.getElementById('productPrice').dataset.value;
+            const newTotalPrice = (productPrice * newQuantity).toFixed(2);
+
+            fetch('/cart/update-order-quantity/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                order_id: orderId,
+                quantity: newQuantity,
+                total_price: newTotalPrice
+            })
+            })
+            .then(response => response.json())
+            .then(data => {
+            if (data.success) {
+                totalPrice.innerText = 'Total: $' + newTotalPrice;
+            } else {
+                alert('Failed to update quantity: ' + data.error);
+            }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
         function deleteOrder(orderId) {
             if (confirm("Are you sure you want to delete this order?")) {
                 fetch(`/cart/delete-order/${orderId}/`, {

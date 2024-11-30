@@ -29,7 +29,7 @@
                         <li><p>Pick one coffee bean of your choice</p></li>
                         <li><p>Free coffee mood chart</p></li>
                     </ul>
-                    <button id="btn-one-bean" class="btn" onclick="orderSubscription()" disabled>Pick one bean</button>
+                    <button id="btn-one-bean" class="btn" onclick="orderSubscription()" >Pick one bean</button>
                 </div>
 
                 <div class="subscription-card">
@@ -39,18 +39,18 @@
                         <li><p>Pick five small packages of coffee beans of your choice</p></li>
                         <li><p>Free coffee notebook</p></li>
                     </ul>
-                    <button id="btn-weekly-bean" class="btn" onclick="orderSubscription()" disabled>Pick five beans</button>
+                    <button id="btn-weekly-bean" class="btn" onclick="orderSubscription()" >Pick five beans</button>
                 </div>
 
-                <!-- <div class="subscription-card">
+                <div class="subscription-card">
                     <h2 style="font-size: 40px;">Daily Bean's Choice</h2>
                     <div style="display: flex;"><h2>₱1299</h2><p style=" align-self:flex-end ;"><strong>/mo</strong></p></div>
                     <ul>
                         <li><p>Assortment coffee beans curated from The Daily Bean</p></li>
                         <li><p>Free coffee mood chart</p></li>
                     </ul>
-                    <button class="btn">Buy now</button>
-                </div> -->
+                    <button class="btn" onclick="alert('Unimplemented feature')">Buy now</button>
+                </div>
             </div>
 
             <div style="display: flex; justify-content: center;">
@@ -67,13 +67,14 @@
                 </div>
             </div>
         </section>
-
     
         <!-- Product Listings -->
         <div class="product-list">
             {% for product in products %}
                 {% if product.is_available %}
                     <a href="{% url 'product_detail' product.id %}?from=subscriptions" style="text-decoration: none; color: inherit;">
+                        <input type="checkbox" id="checkbox-product-{{ product.id }}" data-product-id="{{ product.id }}" onclick="checkAmount(this)">
+                        <label for="checkbox-product-{{ product.id }}">
                         <div class="product-item">
                             <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
                             <h4>{{ product.product_name }}</h4>
@@ -106,8 +107,8 @@
                                 {% endif %}
                             </div>
                             <p class="product-price">${{ product.price }}</p>
-                            <input type="checkbox" id="checkbox-product-{{ product.id }}" data-product-id="{{ product.id }}" onclick="checkAmount(this)">
                         </div>
+                        </label>
                     </a>    
                 {% endif %}
             {% empty %}
@@ -129,21 +130,15 @@
                 products.push(productId)
             else
                 products = products.filter(item => item !== productId);
-            
-            if (products.length == 1)
-                btnOneBean.disabled = false
-            else
-                btnOneBean.disabled = true
-
-            if (products.length == 5)
-                btnWeeklyBean.disabled = false
-            else
-                btnWeeklyBean.disabled = true
         }
 
         function orderSubscription() {
             const productString = products.join(", ");
-            alert(productString)
+            
+            if(products.length != 1 && products.length != 5){
+                alert("Invalid quantity of selected products!")
+                return;
+            }
 
             fetch(`/products/add-to-subscription/`, {
                 method: 'POST',
