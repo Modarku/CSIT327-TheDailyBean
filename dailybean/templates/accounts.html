@@ -167,11 +167,24 @@
         </div>
     </section>
 
-
     <!-- Current Subscriptions Section -->
     <section class="subscriptions-section">
         <h2>Current Subscriptions</h2>
-        <p>No subscriptions yet... :(</p>
+        {% for order in subscriptions %}
+                {% if order.product.is_available %}
+                    <div class="order-item">
+                        <div style="align-self: center; display: flex;">
+                            <img class="order-img" src="{{ order.product.product_image.url }}" alt="{{ order.product.product_name }}">
+                            <h4 style="align-self: center; margin-left: 10px;">{{ order.product.product_name }}</h4>
+                        </div>
+                        <h4 style="align-self: center;">Type: {{ order.subscription_type }}</h4>
+                        <p class="product-price" style="align-self: center;">Date till next payment: {{ order.next_monthly|date:"m/d/Y" }}</p>
+                        <img style="align-self: center;" src="{% static 'images/trash-icon.png' %}" data-subscription-id="{{ order.id }}" onclick="cancelSubsription(this.dataset.subscriptionId)">
+                    </div>    
+                {% endif %}
+        {% empty %}
+            <p>No subscriptions yet... :(</p>
+        {% endfor %}
     </section>
 
     <!-- Payment History Section -->
@@ -305,6 +318,25 @@
                 .catch(error => {
                     console.error('Error:', error);
                 });
+            }
+        }
+
+        function cancelSubsription(subscriptionId) {
+            if (confirm("Are you sure you want to cancel this subscription?")) {
+                fetch(`/account/cancel-subscription/${subscriptionId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}', 
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete the order. Please try again.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
             }
         }
 

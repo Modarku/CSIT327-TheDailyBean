@@ -1,4 +1,7 @@
 from django.db import models
+from login.models import User
+from django.utils import timezone
+from datetime import datetime
 
 class Product(models.Model):
     product_name = models.CharField(max_length=255, null=False)
@@ -23,8 +26,33 @@ class Product(models.Model):
             self.is_available = False
         super(Product, self).save(*args, **kwargs)
 
+class ProductSubscription(models.Model):
+    ONEBEAN = 'onebean'
+    WEEKLYBEAN = 'weeklybean'
+    CHOICEBEAN = 'choicebean'
+
+    SUBSCRIPTION_TYPE_CHOICES = [
+        (ONEBEAN, 'Onebean'),
+        (WEEKLYBEAN, 'Weeklybean'),
+        (CHOICEBEAN, 'Choicebean'),
+    ]
+
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    subscription_type = models.CharField(max_length=10, choices=SUBSCRIPTION_TYPE_CHOICES)
+    next_monthly = models.DateTimeField(default=None)
+    is_active = models.BooleanField(default=False)
+    price = models.DecimalField(max_digits=5, decimal_places=2, null=False, default=0)
+
+    def __str__(self):
+        return self.subscription_type + " Product: " + self.product.product_name + " User: " + self.user.username
+    
+
 
 class Review(models.Model):
-    productID = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     text = models.TextField()
     rating = models.FloatField()
+    date_created = models.DateTimeField(default=timezone.now)

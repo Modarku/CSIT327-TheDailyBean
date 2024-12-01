@@ -13,8 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     
-    <div class="cart-page" style="max-width: 1200px; margin: auto;">
-
+    <div class="cart-page">
         {% if messages %}
             <ul>
                 {% for message in messages %}
@@ -27,7 +26,9 @@
             {% csrf_token %}
             <div style="margin: 20px; display: flex; justify-content: space-between;">
                 <h1>CART PAGE</h1>
-                <button class="btn">Proceed to Payment</button>
+                {% if is_authenticated %}
+                    <button class="btn">Proceed to Payment</button>
+                {% endif %}
             </div>
             
             <div>
@@ -49,19 +50,19 @@
                             </div>    
                         {% endif %}
                     {% empty %}
-                        <p>Nothing in the cart yet...</p>
+                            {% if is_authenticated %}
+                                <p>Nothing in the cart yet...</p>
+                            {% else %}
+                                <p>You must login to view your cart!</p>
+                                <br>
+                                <a href="{% url 'login' %}" class="btn">Log in</a></li>
+                            {% endif %}
                     {% endfor %}
                 </div>
             </div>
         </form>
-        
-        <br><hr><br>
-        <!-- To Favorites Button -->
-        <a href="{% url 'user_favorites' %}" style="margin-left: 50px">
-            <button id="btn" class="btn">Favorites</button>
-        </a>
     </div>
-
+    
 
     <script>
         function deleteOrder(orderId) {

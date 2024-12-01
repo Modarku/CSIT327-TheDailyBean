@@ -29,13 +29,13 @@
 
           <div class="nav-icons">
               {% if is_authenticated %}
-                  <a href="{% url 'account' %}" class="icon">
+                    <a href="{% url 'account' %}" class="icon"><img src="{% static 'images/account-icon.png' %}" alt="accounts"></a>
+                    <span><a href="{% url 'user_favorites' %}"><img style="height:32px;width:32px;" src="{% static 'images/unfilled_heart.png' %}" alt="favorites"></a></span>
+                    <span><a href="{% url 'cartpage' %}"><img src="{% static 'images/cart-icon.png' %}" alt="accounts"></a></span>
               {% else %}
-                  <span class="welcome-text">Not Logged In</span>
-                  <a href="{% url 'login' %}" class="icon">
+                    <span class="welcome-text">Not Logged In</span>
+                    <a href="{% url 'login' %}" class="icon"><img src="{% static 'images/account-icon.png' %}" alt="accounts"></a>
               {% endif %}
-              <img src="{% static 'images/account-icon.png' %}" alt="accounts"></a>
-              <span><a href="{% url 'cartpage' %}"><img src="{% static 'images/cart-icon.png' %}" alt="accounts"></a></a></span>
           </div>
       </nav>
   </header>

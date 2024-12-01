@@ -16,9 +16,9 @@
 {% endblock %}
 
 {% block content %}
-    <div style="margin: 20px; display: flex; flex-direction: column; min-height: 65vh; height: auto; overflow: auto;">
+    <div class="success-container">
         <h1>SUCCESS. THANK YOU FOR BUYING!</h1>
-        <a href="{% url 'product_list' %}?name=products" class="btn" style="text-align: center; margin: 20px;"> Search for more products! </a>
+        <a href="{% url 'product_list' %}?name=products" class="btn">Search for more products!</a>
     </div>
     
 {% endblock %}

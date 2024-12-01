@@ -1,3 +1,7 @@
-from django.test import TestCase
+from django.urls import path
+from . import views
 
-# Create your tests here.
+urlpatterns = [
+    path('', views.user_favorites, name='user_favorites'),
+    path('toggle/<int:product_id>/', views.toggle_favorite, name='toggle_favorite'),
+]

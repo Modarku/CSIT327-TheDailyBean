@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 from .forms import UserEditForm, SetPasswordForm, AddressForm
 from .models import Address
 from payment.models import Order
+from home.models import ProductSubscription
 from django.contrib import messages
 from django.http import JsonResponse
 import logging
@@ -57,6 +59,7 @@ def account_view(request):
 
     addresses = Address.objects.filter(user=request.user)
     orders = Order.objects.filter(user=request.user, date_paid__isnull=False)
+    subscriptions = ProductSubscription.objects.filter(user=request.user, is_active=True)
 
     context = {
         'is_authenticated': request.user.is_authenticated,
@@ -66,6 +69,7 @@ def account_view(request):
         'address_form': address_form,
         'addresses': addresses,
         'orders': orders,
+        'subscriptions' : subscriptions,
     }
 
     return render(request, 'accounts.html', context)
@@ -131,3 +135,12 @@ def get_address(request, address_id):
         'additional_details': address.additional_details,
     }
     return JsonResponse(data)
+
+@require_http_methods(["DELETE"])
+def cancel_subscription(request, subscription_id):
+    try:
+        subscription = ProductSubscription.objects.get(id=subscription_id)
+        subscription.delete()
+        return JsonResponse({'message': 'Subscription cancelled successfully.'}, status=200)
+    except Order.DoesNotExist:
+        return JsonResponse({'error': 'Subscription not found.'}, status=404)

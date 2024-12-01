@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse
-from home.models import Product
+from home.models import ProductSubscription
 from payment.models import Order
 from django.http import HttpResponse
 from django.template import loader
@@ -10,13 +10,14 @@ from django.template import loader
 # Create your views here.
 
 def view_cart(request):
-    orders = Order.objects.filter(user=request.user, date_paid__isnull=True).select_related('product')
-
     context = {
         'is_authenticated': request.user.is_authenticated,
         'is_admin': request.user.is_staff,
-        'orders' : orders,
     }
+
+    if(request.user.is_authenticated):
+        orders = Order.objects.filter(user=request.user, date_paid__isnull=True).select_related('product')
+        context['orders'] = orders
 
     return render(request, 'cart.html', context)
 
