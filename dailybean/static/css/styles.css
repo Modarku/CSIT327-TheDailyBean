@@ -1368,3 +1368,87 @@ section {
 .success-container .btn:hover {
     background-color: #692b01; 
 }
+
+/* DELETE ACCOUNT PAGE */
+.delete-account-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    padding: 20px;
+    text-align: center;
+}
+
+.delete-account-container h2 {
+    font-size: 2rem;
+    color: #343a40;
+    font-family: "Bitter", system-ui;
+    margin-bottom: 20px;
+}
+
+.delete-account-container p {
+    font-family: "Fjalla One", sans-serif;
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 40px;
+}
+
+.delete-account-form {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.delete-account-form label {
+    font-family: "Fjalla One", sans-serif;
+    display: block;
+    font-size: 1rem;
+    color: #343a40;
+    margin-bottom: 10px;
+}
+
+.delete-account-form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.delete-account-form .btn {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    color: #fff;
+    background-color: #823602;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.delete-account-form .btn:hover {
+    background-color: #692b01;
+}
+
+.cancel-container {
+    margin-top: 20px;
+}
+
+.cancel-btn {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    color: #fff;
+    background-color: #6c757d;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cancel-btn:hover {
+    background-color: #495057;
+}
