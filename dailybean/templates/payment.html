@@ -14,9 +14,15 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     <section>
+        <div id="subscriptions-check" data-has-subscriptions="{% if subscriptions %}true{% else %}false{% endif %}"></div>
+        {% if subscriptions %}
+        <div id="subscription-list" data-subscription-list="{{ data }}"></div>
+        {% endif %}
+
         <div class="checkout-container">
             <h1>CHECKOUT</h1>
 
+            {% if subscriptions or orders %}
             <!-- Shipping Information Section -->
             <section class="shipping-info">
                 <div style="display: flex;">
@@ -139,7 +145,7 @@
                             <input type="hidden" name="order_ids" value="{{ order.id }}">
                         {% endfor %}
                         <hr style="border-color:darkgoldenrod; width: 50%; float: right;"><br>
-                        <button type="submit" class="btn confirm" style="float: right;">Confirm</button>
+                        <button type="submit" id="confirmButton" class="btn confirm" style="float: right;">Confirm</button>
                     </form>
                 {% endif %}
 
@@ -155,16 +161,64 @@
                         {% endfor %}
                         
                         <hr style="border-color:darkgoldenrod; width: 50%; float: right;"><br>
-                        <button type="submit" class="btn confirm" style="float: right;">Confirm</button>
+                        <button type="submit" id="confirmButton" class="btn confirm" style="float: right;">Confirm</button>
                     </form>
                 {% endif %}
-
-                
+            {% else %}
+            <h2>Currently nothing to pay.</h2>
+            {% endif %}
             </section>
         </div>
     </section>
 
     <script>
+        let isConfirmed = false;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let subscriptionsCheckElement = document.getElementById("subscriptions-check");
+            const hasSubscriptions = subscriptionsCheckElement.dataset.hasSubscriptions === "true";
+        });
+
+        window.addEventListener("beforeunload", (event) =>{
+            let subscriptionsCheckElement = document.getElementById("subscriptions-check");
+            const hasSubscriptions = subscriptionsCheckElement.dataset.hasSubscriptions === "true";
+            let confirmation = null;
+
+            if(hasSubscriptions && !isConfirmed) {
+                deleteProductSubscription();
+                event.preventDefault();
+                event.returnValue = '';
+            }
+        });
+
+        document.getElementById("confirmButton").addEventListener("click", () => {
+            isConfirmed = true;
+        });
+
+        function deleteProductSubscription() {
+            const subscriptionListData = document.getElementById('subscription-list').getAttribute('data-subscription-list');
+
+            const formData = new FormData();
+            formData.append('subscriptions', subscriptionListData);
+
+            fetch("/payment/subscribe/delete-subscription/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": '{{ csrf_token }}',
+                },
+                body: JSON.stringify(subscriptionListData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to delete subscription");
+                }
+                console.log("Subscription deleted");
+                return response.json()
+            })
+            .catch(error => console.error(error));
+        }
+
         function setDefaultAddress() {
             const addressId = document.getElementById('address-select').value;
             

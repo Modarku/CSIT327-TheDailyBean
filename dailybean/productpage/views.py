@@ -7,26 +7,44 @@ from home.models import Product, ProductSubscription, Review
 from payment.models import Order
 from favorites.models import Favorite
 from django.http import JsonResponse
+from django.db.models import Avg
 import json
 
 # Create your views here.
 
 def view_products(request):
+    user = request.user
     page = request.GET.get('page', 'products')
     template = 'subscriptions.html' if page == 'subscriptions' else 'products.html'
+
+    product_subscriptions = ProductSubscription.objects.filter(user=user)
+    has_onebean = False
+    has_weeklybean = False
+
+    for product_subscription in product_subscriptions:
+       if product_subscription.subscription_type == 'Onebean': has_onebean = True
+       if product_subscription.subscription_type == 'Weeklybean': has_weeklybean = True
 
     context = {
         'is_authenticated': request.user.is_authenticated,
         'is_admin': request.user.is_staff,
         'products': Product.objects.all(),
+        'has_onebean': has_onebean,
+        'has_weeklybean': has_weeklybean,
+
     }
     return render(request, template, context)
 
 def product_detail(request, id):
+    user = request.user
     product = get_object_or_404(Product, id=id)
     reviews = Review.objects.filter(product=id).order_by('-id')
+    orders = Order.objects.filter(user=user)
     favorites = Favorite.objects.filter(product=product)
     
+    #Product average rating helper function
+    product_rating_helper(product)
+
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
@@ -45,6 +63,7 @@ def product_detail(request, id):
         'is_authenticated': request.user.is_authenticated,
         'is_admin': request.user.is_staff,
         'product': get_object_or_404(Product, id=id),
+        'orders' : orders,
         'reviews': reviews,
         'form' : form,
         'is_favorited' : favorites.filter(user=request.user).exists,
@@ -159,7 +178,7 @@ def edit_review(request, product_id, review_id):
 
         if form.is_valid():
             review.text = request.POST.get('text')
-            form.save() 
+            form.save()
             return redirect('product_detail') 
 
     context = {
@@ -168,7 +187,13 @@ def edit_review(request, product_id, review_id):
         'is_admin': request.user.is_staff,
         'product': product,
         'reviews': reviews,
-        'form': form,  # Pass the form to the template
+        'form': form,
     }
 
     return render(request, 'product_detail.html', context)
+
+# Creates ratings for products
+def product_rating_helper(product):
+    avg_rating = Review.objects.filter(product=product).aggregate(Avg('rating'))['rating__avg']
+    product.rating = avg_rating if avg_rating is not None else 0   
+    product.save()

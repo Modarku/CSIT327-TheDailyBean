@@ -9,7 +9,7 @@ class Product(models.Model):
     product_ingredients = models.TextField(null=False)
     product_shelflife = models.CharField(max_length=255, null=False)
     product_image = models.ImageField(upload_to='products/', null=False)
-    rating = models.FloatField()
+    rating = models.FloatField(default=0)
     stock = models.IntegerField(null=False, default=0)
     is_available = models.BooleanField(default=False)
     price = models.DecimalField(max_digits=5, decimal_places=2, null=False, default=0)
@@ -19,7 +19,6 @@ class Product(models.Model):
         return self.product_name
     
     def save(self, *args, **kwargs):
-        self.rating = 0
         if self.stock > 0:
             self.is_available = True
         else:
@@ -36,7 +35,6 @@ class ProductSubscription(models.Model):
         (WEEKLYBEAN, 'Weeklybean'),
         (CHOICEBEAN, 'Choicebean'),
     ]
-
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

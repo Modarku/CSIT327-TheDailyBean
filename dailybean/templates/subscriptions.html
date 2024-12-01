@@ -29,7 +29,11 @@
                         <li><p>Pick one coffee bean of your choice</p></li>
                         <li><p>Free coffee mood chart</p></li>
                     </ul>
-                    <button id="btn-one-bean" class="btn" onclick="orderSubscription()" >Pick one bean</button>
+                    {% if has_onebean %}
+                        <button id="btn-one-bean" class="btn">Currently Subscribed</button>
+                    {% else %}
+                        <button id="btn-one-bean" class="btn" onclick="orderSubscription()" >Pick one bean</button>
+                    {% endif %}
                 </div>
 
                 <div class="subscription-card">
@@ -39,7 +43,11 @@
                         <li><p>Pick five small packages of coffee beans of your choice</p></li>
                         <li><p>Free coffee notebook</p></li>
                     </ul>
-                    <button id="btn-weekly-bean" class="btn" onclick="orderSubscription()" >Pick five beans</button>
+                    {% if has_weeklybean %}
+                        <button id="btn-weekly-bean" class="btn" disabled >Currently Subscribed</button>
+                    {% else %}
+                        <button id="btn-weekly-bean" class="btn" onclick="orderSubscription()" >Pick five beans</button>
+                    {% endif %}
                 </div>
 
                 <!-- <div class="subscription-card">

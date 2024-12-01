@@ -27,7 +27,7 @@
             {% else %}
                 <a href="{% url 'product_list' %}?page=products" class="back-link">← Back to Products</a>
             {% endif %}
-    
+
             <div class="product-detail">
                 <div class="product-image">
                     <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
@@ -111,7 +111,7 @@
                     {% endif %}
                     <br><hr><br>
                     {% if user.is_authenticated %}
-                        <form action="{% url 'toggle_favorite' product.id %}" method="post">
+                        <form action="{% url 'toggle_favorite' product.id 'product_detail' %}" method="post">
                             {% csrf_token %}
                             {% if is_favorited %}
                                 <button type="submit" class="btn">Remove from Favorites</button>
@@ -153,7 +153,13 @@
                             <label for="text">Your Review:</label><br>
                             {{ form.text }}
                         </div>
-                        <button type="submit" class="comment-btn">Comment</button>
+                        <p>You must buy the product to comment and rate.</p>
+                        {% for order in orders %}
+                            {% if order.product.id == product.id %}
+                                <button type="submit" class="comment-btn">Comment</button>
+                            {% endif %}
+                        {% endfor %}
+                        
                     </form>
                 </div>
                 
@@ -224,7 +230,6 @@
                     {% else %}
                         <p>No reviews yet for this product.</p>
                     {% endif %}
-    
                 </div>
     
                 <!-- Load More Comments Button -->
