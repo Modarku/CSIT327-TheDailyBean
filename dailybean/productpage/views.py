@@ -5,6 +5,7 @@ from django.utils import timezone
 from .forms import ReviewForm
 from home.models import Product, ProductSubscription, Review
 from payment.models import Order
+from favorites.models import Favorite
 from django.http import JsonResponse
 import json
 
@@ -24,6 +25,7 @@ def view_products(request):
 def product_detail(request, id):
     product = get_object_or_404(Product, id=id)
     reviews = Review.objects.filter(product=id).order_by('-id')
+    favorites = Favorite.objects.filter(product=product)
     
     if request.method == 'POST':
         form = ReviewForm(request.POST)
@@ -45,6 +47,8 @@ def product_detail(request, id):
         'product': get_object_or_404(Product, id=id),
         'reviews': reviews,
         'form' : form,
+        'is_favorited' : favorites.filter(user=request.user).exists,
+        'favorites_count' : favorites.count
     }
 
     return render(request, 'product_detail.html', context)
@@ -55,18 +59,24 @@ def add_to_cart(request, product_id):
     user = request.user
 
     quantity = int(request.POST.get('quantity', 1))
+    
+    # added this to stack existing products
+    existing_order = Order.objects.filter(product=product, user=user, date_paid=None).first()
+    if existing_order:
+        existing_order.product_amount += quantity
+        existing_order.total = existing_order.product_amount * product.price
+        existing_order.save()
+    else:
+        total_price = product.price * quantity
+        Order.objects.create(
+            product=product,
+            user=user,
+            product_amount=quantity,
+            total=total_price,
+            date_paid=None
+        )
 
-    total_price = product.price * quantity
-
-    Order.objects.create(
-        product=product,
-        user=user,
-        product_amount=quantity,
-        total=total_price,
-        date_paid=None
-    )
-
-    return redirect('product_list')
+    return redirect('product_detail', product_id)
 
 def search_products(request):
     query = request.GET.get('q') 

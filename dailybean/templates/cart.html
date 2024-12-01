@@ -16,64 +16,87 @@
     <div class="cart-page">
         <ul>
             {% for message in messages %}
-                {% if 'msg_stock' in message.tags %}
-                    <li class="error-text">{{ message }}</li>
-                {% endif %}
+               
             {% endfor %}
         </ul>
 
         <form id="paymentForm" method="POST">
+    <section>
+        {% if messages %}
+            {% for message in messages %}
+                {% if 'removed' in message.tags %}
+                    <div class="messages" style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 10px; margin-bottom: 15px; border-radius: 4px; position: relative;">
+                        <p class="alert alert-success" style="margin: 0;">{{ message }}</p>
+                        <button style="background: none; border: none; color: #721c24; position: absolute; top: 5px; right: 10px; font-size: 30px; cursor: pointer;" onclick="this.parentElement.style.display='none';">&times;</button>
+                    </div>
+                {% else %}
+                    <div class="messages" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin-bottom: 15px; border-radius: 4px; position: relative;">
+                        <p class="alert alert-success" style="margin: 0;">{{ message }}</p>
+                        <button style="background: none; border: none; color: #155724; position: absolute; top: 5px; right: 10px; font-size: 30px; cursor: pointer;" onclick="this.parentElement.style.display='none';">&times;</button>
+                    </div>
+                {% endif %}
+                {% if 'msg_stock' in message.tags %}
+                    <li class="error-text">{{ message }}</li>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        
+        <form action="{% url 'payment' %}" method="POST">
             {% csrf_token %}
-            <div style="margin: 20px; display: flex; justify-content: space-between;">
+            <div style="margin: 0px 20px; display: flex; justify-content: space-between;">
                 <h1>CART PAGE</h1>
                 {% if is_authenticated %}
                     <button class="btn" onclick="paymentProceed()">Proceed to Payment</button>
                 {% endif %}
             </div>
             
-            <div class="order-list">
-                {% for order in orders %}
-                    {% if order.product.is_available %}
-                        <div class="order-item">
-                            {% if order.product.stock > order.product_amount %}
-                                <input type="checkbox" value="{{ order.id }}" name="checkout-box" style="width: 20px; height: 20px; align-self: center;" checked>
-                            {% else %}
-                                <input type="checkbox" value="{{ order.id }}" name="checkout-box" style="width: 20px; height: 20px; align-self: center;" disabled>
-                            {% endif %}
-                            <div style="align-self: center; display: flex;">
-                                <img class="order-img" src="{{ order.product.product_image.url }}" alt="{{ order.product.product_name }}">
-                                <h4 style="align-self: center; margin-left: 10px;">{{ order.product.product_name }}</h4>
-                            </div>
-                            <p class="product-price" id="productPrice" data-value="{{ order.product.price }}" style="align-self: center;">Price: ${{ order.product.price }}</p>
-                            <input style="align-self: center; width: 60px;" type="number" name="order-quantity" 
-                                value="{{ order.product_amount }}" 
-                                min="1" 
-                                data-order-id="{{ order.id }}" 
-                                style="width: 50px; align-self: center;" 
-                                onchange="updateOrderQuantity(this)">
-                            <p class="product-price" id="totalPrice" data-value="{{ order.total }}" style="align-self: center;">Total: ${{ order.total }}</p>
-                            <img style="align-self: center;" src="{% static 'images/trash-icon.png' %}" data-order-id="{{ order.id }}" onclick="deleteOrder(this.dataset.orderId)">
-                        </div>    
-                    {% endif %}
-                {% empty %}
-                        {% if is_authenticated %}
-                            <p>Nothing in the cart yet...</p>
-                        {% else %}
-                            <p>You must login to view your cart!</p>
-                            <br>
-                            <a href="{% url 'login' %}" class="btn">Log in</a></li>
+            <div>
+                <div class="order-item">
+                    <div style="display: flex; flex-direction: row;">
+                        <input type="checkbox" id="select-all-checkbox" style="width: 20px; height: 20px; align-self: center;" checked>
+                        <span style="align-self: center; margin-left: 20px;">Select All</span>
+                    </div>
+                </div>
+                <div class="order-list">
+                    {% for order in orders %}
+                        {% if order.product.is_available %}
+                            <div class="order-item">
+                                {% if order.product.stock > order.product_amount %}
+                                    <input type="checkbox" class="order-checkbox" value="{{ order.id }}" name="checkout-box" style="width: 20px; height: 20px; align-self: center;" checked>
+                                {% else %}
+                                    <input type="checkbox" class="order-checkbox" value="{{ order.id }}" name="checkout-box" style="width: 20px; height: 20px; align-self: center;" disabled>
+                                {% endif %}
+                                <div style="align-self: center; display: flex;">
+                                    <img class="order-img" src="{{ order.product.product_image.url }}" alt="{{ order.product.product_name }}">
+                                    <h4 style="align-self: center; margin-left: 10px;">{{ order.product.product_name }}</h4>
+                                </div>
+                                
+                                <p class="product-price" id="productPrice" data-value="{{ order.product.price }}" style="align-self: center;">Price: ${{ order.product.price }}</p>
+                                
+                                <input style="align-self: center; width: 60px;" type="number" name="order-quantity" 
+                                    value="{{ order.product_amount }}" 
+                                    min="1" 
+                                    data-order-id="{{ order.id }}" 
+                                    style="width: 50px; align-self: center;" 
+                                    onchange="updateOrderQuantity(this)">
+                                <p class="product-price" id="totalPrice" data-value="{{ order.total }}" style="align-self: center;">Total: ${{ order.total }}</p>
+                                <img style="align-self: center;" src="{% static 'images/trash-icon.png' %}" data-order-id="{{ order.id }}" onclick="deleteOrder(this.dataset.orderId)">
+                            </div>    
                         {% endif %}
-                {% endfor %}
+                    {% empty %}
+                            {% if is_authenticated %}
+                                <p>Nothing in the cart yet...</p>
+                            {% else %}
+                                <p>You must login to view your cart!</p>
+                                <br>
+                                <a href="{% url 'login' %}" class="btn">Log in</a></li>
+                            {% endif %}
+                    {% endfor %}
+                </div>
             </div>
         </form>
-        
-        <br><hr><br>
-        <!-- To Favorites Button -->
-        <a href="{% url 'user_favorites' %}" style="margin-left: 50px">
-            <button id="btn" class="btn">Favorites</button>
-        </a>
-    </div>
-    
+    </section>
+
     <script>
         function paymentProceed() {
             const form = document.getElementById('paymentForm');
@@ -130,6 +153,30 @@
                 .catch(error => console.error('Error:', error));
             }
         }
+
+        // select all
+        const selectAllCheckbox = document.getElementById('select-all-checkbox');
+        const orderCheckboxes = document.querySelectorAll('.order-checkbox');
+
+        selectAllCheckbox.addEventListener('change', function() {
+            orderCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+        // select all negation
+        orderCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                const allChecked = [...orderCheckboxes].every(function(checkbox) {
+                    return checkbox.checked;
+                });
+
+                selectAllCheckbox.checked = allChecked;
+
+                if (!this.checked) {
+                    selectAllCheckbox.checked = false;
+                }
+            });
+        });
     </script>
     
 {% endblock %}

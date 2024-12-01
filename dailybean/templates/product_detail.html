@@ -82,14 +82,32 @@
                         <button class="add-to-cart-btn">Add to Subscription</button>
                     {% else %}
                     <!-- Add to Cart Button -->
-                    <form method="POST" action="{% url 'add_to_cart' product.id %}">
-                        {% csrf_token %}
-                        <div class="quantity-selector">
-                            <label for="quantity">Qty:</label>
-                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}">
-                        </div>
-                        <button type="submit" class="add-to-cart-btn">Add to Cart</button>
-                    </form>
+                        <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                            {% csrf_token %}
+                            <div class="quantity-selector">
+                                <label for="quantity">Qty:</label>
+                                <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}">
+                            </div>
+                            <div>
+                                <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </form>
+                        <br>
+                        {% if user.is_authenticated %}
+                            <form action="{% url 'toggle_favorite' product.id 'product_detail' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn" style="display: flex; align-items: center; gap: 10px">
+                                    {% if is_favorited %}
+                                        <img src="/static/images/filled_heart.png" alt="Remove from Favorites" style="height:32px; width:auto;">
+                                    {% else %}
+                                        <img src="/static/images/unfilled_heart.png" alt="Add to Favorites" style="height:32px; width:auto;">
+                                    {% endif %}
+                                    <span style="margin:auto;">{{ favorites_count }}</span>
+                                </button>
+                            </form>
+                        {% else %}
+                            <p><a href="{% url 'login' %}">Log in</a> to favorite this product.</p>
+                        {% endif %}
                     {% endif %}
                     <br><hr><br>
                     {% if user.is_authenticated %}

@@ -52,7 +52,7 @@
         </div>
         
         <!-- Product Listings -->
-        <div class="product-list">
+        <div class="product-list" style="justify-content: center;">
             {% for product in products %}
                 {% if product.is_available %}
                     <a href="{% url 'product_detail' product.id %}?from=products" style="text-decoration: none; color: inherit;">

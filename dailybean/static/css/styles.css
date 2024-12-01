@@ -663,7 +663,7 @@ h2 {
   /* Basic styling for the dropdown wrapper */
 .address-dropdown {
     width: 100%;
-    max-width: 300px;
+    max-width: 50%;
     margin: 20px auto;
     font-family: Arial, sans-serif;
 }
@@ -1334,6 +1334,7 @@ section {
     min-height: 100vh;
     height: auto;
     overflow: auto;
+    
 }
 
 /* PAYMENT PAGE */
