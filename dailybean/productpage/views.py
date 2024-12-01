@@ -59,18 +59,24 @@ def add_to_cart(request, product_id):
     user = request.user
 
     quantity = int(request.POST.get('quantity', 1))
+    
+    # added this to stack existing products
+    existing_order = Order.objects.filter(product=product, user=user, date_paid=None).first()
+    if existing_order:
+        existing_order.product_amount += quantity
+        existing_order.total = existing_order.product_amount * product.price
+        existing_order.save()
+    else:
+        total_price = product.price * quantity
+        Order.objects.create(
+            product=product,
+            user=user,
+            product_amount=quantity,
+            total=total_price,
+            date_paid=None
+        )
 
-    total_price = product.price * quantity
-
-    Order.objects.create(
-        product=product,
-        user=user,
-        product_amount=quantity,
-        total=total_price,
-        date_paid=None
-    )
-
-    return redirect('product_list')
+    return redirect('product_detail', product_id)
 
 def search_products(request):
     query = request.GET.get('q') 

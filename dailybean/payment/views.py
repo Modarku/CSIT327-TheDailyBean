@@ -11,8 +11,17 @@ from django.http import HttpResponse
 def payment_view(request):
     try:
         if request.method == 'POST':
-            order_ids = request.POST.getlist('checkout-box') 
+            order_ids = request.POST.getlist('checkout-box')
+            if not order_ids:
+                messages.error(request, "No orders selected for checkout.")
+                return redirect('cartpage')
+            
             orders = Order.objects.filter(id__in=order_ids)
+            if not orders.exists():
+                messages.error(request, "No valid orders found for checkout.")
+                return redirect('cartpage')
+            
+            order_sum = sum(order.total for order in orders)
 
             addresses = Address.objects.filter(user=request.user)
             context = {
@@ -20,6 +29,7 @@ def payment_view(request):
                 'is_admin': request.user.is_staff,
                 'addresses': addresses,
                 'orders' : orders,
+                'order_sum' : order_sum
             }
             return render(request, 'payment.html', context)
         else:

@@ -24,7 +24,7 @@ def view_cart(request):
 @require_http_methods(["DELETE"])
 def delete_order(request, order_id):
     try:
-        order = Order.objects.get(id=order_id)
+        order = Order.objects.get(id=order_id, user=request.user)
         order.delete()
         return JsonResponse({'message': 'Order deleted successfully.'}, status=200)
     except Order.DoesNotExist:
