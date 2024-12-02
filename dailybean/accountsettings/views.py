@@ -7,6 +7,8 @@ from payment.models import Order
 from home.models import ProductSubscription
 from django.contrib import messages
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 import logging
 
 logger = logging.getLogger(__name__)
@@ -144,3 +146,18 @@ def cancel_subscription(request, subscription_id):
         return JsonResponse({'message': 'Subscription cancelled successfully.'}, status=200)
     except Order.DoesNotExist:
         return JsonResponse({'error': 'Subscription not found.'}, status=404)
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        if not request.user.check_password(password):
+            messages.error(request, "Incorrect password.")
+            return redirect('delete_account')
+
+        user = request.user
+        user.delete()
+        messages.success(request, "Your account has been successfully deleted.")
+        return redirect('home.html')
+
+    return render(request, 'delete_account.html')
