@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from home.models import Product
 from .models import Favorite
 from django.contrib import messages
+from django.http import JsonResponse
 # Create your views here.
 
 def product_favorites(request, product_id):
@@ -28,15 +29,19 @@ def user_favorites(request):
 
 @login_required
 def toggle_favorite(request, product_id, redirect_url):
-    product = get_object_or_404(Product, id=product_id)
-    favorite, created = Favorite.objects.get_or_create(user=request.user, product=product)
-    if not created:
-        favorite.delete()
-        messages.success(request, f'Removed {product.product_name} from your favorites.')
-    else:
-        messages.success(request, f'Added {product.product_name} to your favorites.')
+    try:
+        product = get_object_or_404(Product, id=product_id)
+        favorite, created = Favorite.objects.get_or_create(user=request.user, product=product)
+        if not created:
+            favorite.delete()
+            messages.success(request, f'Removed {product.product_name} from your favorites.', extra_tags='red')
+        else:
+            messages.success(request, f'Added {product.product_name} to your favorites.', extra_tags='green')
 
-    if redirect_url == "product_detail":
-        return redirect('product_detail', id=product.id)
-    else:
-        return redirect('user_favorites')
+        if redirect_url == "product_detail":
+            return redirect('product_detail', id=product.id)
+        else:
+            # return redirect('user_favorites')
+            return JsonResponse({'message': 'Success', 'status': 'ok'})
+    except Exception as e:
+            return JsonResponse({'message': str(e), 'status': 'error'})

@@ -8,6 +8,7 @@ from payment.models import Order
 from favorites.models import Favorite
 from django.http import JsonResponse
 from django.db.models import Avg
+from django.contrib import messages
 import json
 
 # Create your views here.
@@ -95,6 +96,8 @@ def add_to_cart(request, product_id):
             date_paid=None
         )
 
+    messages.success(request, f'Added {quantity} of {product.product_name} to your Cart.', extra_tags='carted')
+    
     return redirect('product_detail', product_id)
 
 def search_products(request):

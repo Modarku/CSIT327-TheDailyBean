@@ -19,33 +19,21 @@
     <!-- New Products Section -->
     <section class="new-products">
         <div class="new-products-label">
-            <h1>Newly Added Beans!</h1>
+            <h1>Highest Rated Beans!</h1>
             <p>The Daily Bean ensures you will enjoy these new flavors!</p>
             <br>
             <a href="{% url 'product_list' %}?name=products" class="btn">Explore Products →</a>
         </div>
         <div class="products-container">
-            <div class="product">
-                <img src="/static/images/coffee_beans_1.jpeg" alt="Midnight Reserve">
-                <div>
-                    <p>Golden Sunrise Blend</p>
-                    <span>₱ 425.00</span>
-                </div>
-            </div>
-            <div class="product">
-                <img src="/static/images/coffee_beans_2.jpg" alt="Golden Sunrise Blend">
-                <div>
-                    <p>Golden Sunrise Blend</p>
-                    <span>₱ 425.00</span>
-                </div>
-            </div>
-            <div class="product">
-                <img src="/static/images/coffee_beans_3.jpg" alt="Velvet Caramel Delight">
-                <div>
-                    <p>Golden Sunrise Blend</p>
-                    <span>₱ 425.00</span>
-                </div>
-            </div>
+            {% for product in products %}
+                <a href="{% url 'product_detail' product.id %}?from=products" class="product" style="text-decoration: none;">
+                    <img src="{{ product.product_image.url }}" alt="{{ product.prodcut_name}}" style="height: 260px;">
+                    <div>
+                        <p style="color:black">{{ product.product_name }}</p>
+                        <span>{{ product.price }}</span>
+                    </div>
+                </a>
+            {% endfor %}
         </div>
     </section>
 

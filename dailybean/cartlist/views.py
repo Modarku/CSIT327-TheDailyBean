@@ -56,6 +56,9 @@ def delete_order(request, order_id):
     try:
         order = Order.objects.get(id=order_id, user=request.user)
         order.delete()
+        
+        messages.success(request, f'Deleted {order.product.product_name} to your favorites.', extra_tags='red')
+
         return JsonResponse({'message': 'Order deleted successfully.'}, status=200)
     except Order.DoesNotExist:
         return JsonResponse({'error': 'Order not found.'}, status=404)
