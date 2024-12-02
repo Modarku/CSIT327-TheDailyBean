@@ -160,7 +160,7 @@ h2 {
     padding: 10px;
     border-radius: 10px;
     text-align: left;
-    height: 350px;
+    height: 400px;
     width: 280px;
 }
 
@@ -651,6 +651,14 @@ h2 {
     margin: 10px 0 5px;
 }
 
+.delete-account-section p{
+    margin-bottom: 20px;
+}
+
+.delete-account-section a{
+    border: 2px solid black;
+}
+
 /* Dropdown container */
 .dropdown {
     position: relative;
@@ -659,7 +667,7 @@ h2 {
   
   /* Basic styling for the dropdown wrapper */
 .address-dropdown {
-    width: 100%;
+    width: 25%;
     max-width: 50%;
     margin: 20px auto;
     font-family: Arial, sans-serif;

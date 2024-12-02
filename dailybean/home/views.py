@@ -8,7 +8,7 @@ def homepage(request):
     context = {
         'is_authenticated': request.user.is_authenticated,
         'is_admin': request.user.is_staff,
-        'products': Product.objects.all().order_by('rating')[:3],
+        'products': Product.objects.all().order_by('-rating')[:3],
     }
     return render(request, 'home.html', context)
 

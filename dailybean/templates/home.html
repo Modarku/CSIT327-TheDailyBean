@@ -29,6 +29,34 @@
                 <a href="{% url 'product_detail' product.id %}?from=products" class="product" style="text-decoration: none;">
                     <img src="{{ product.product_image.url }}" alt="{{ product.prodcut_name}}" style="height: 260px;">
                     <div>
+                        <!-- Stars -->
+                        <div class="product-rating">
+                            {% if product.rating == 0 %}
+                            <p>No Ratings</p>
+                            {% else %}
+                                <img src="/static/images/star.png" class="product-star">
+                                {% if product.rating >= 2 %}
+                                <img src="/static/images/star.png" class="product-star">
+                                {% else %}
+                                <img src="/static/images/empty_star.png" class="product-star">
+                                {% endif %}
+                                {% if product.rating >= 3 %}
+                                <img src="/static/images/star.png" class="product-star">
+                                {% else %}
+                                <img src="/static/images/empty_star.png" class="product-star">
+                                {% endif %}
+                                {% if product.rating >= 4 %}
+                                <img src="/static/images/star.png" class="product-star">
+                                {% else %}
+                                <img src="/static/images/empty_star.png" class="product-star">
+                                {% endif %}
+                                {% if product.rating >= 5 %}
+                                <img src="/static/images/star.png" class="product-star">
+                                {% else %}
+                                <img src="/static/images/empty_star.png" class="product-star">
+                                {% endif %}
+                            {% endif %}
+                        </div>
                         <p style="color:black">{{ product.product_name }}</p>
                         <span>{{ product.price }}</span>
                     </div>
