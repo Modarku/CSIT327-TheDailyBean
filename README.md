@@ -56,10 +56,12 @@ The Daily Bean is an online coffee bean marketplace where passion for coffee mee
 <br>
 
 **Links**
-
 [Gantt Chart](https://docs.google.com/spreadsheets/d/1lFSu1Gdd4UFz1T0iWEvJSLEl58MotyHC/edit?usp=sharing&ouid=103308061537347084844&rtpof=true&sd=true)
+![Gantt Chart](https://github.com/Modarku/CSIT327-TheDailyBean/blob/a44a1dfd6d58f88fce2072139df07d8bdf07365a/dailybean/static/images/The%20Daily%20Bean%20-%20Gantt%20Chart.jpg)
 
 [Entity Relationship Diagram](https://drive.google.com/file/d/1YvhLOIkDxHGi0yj7NyAK2DyY4haKudIt/view?usp=sharing)
+![Entity Relationship Diagram](https://github.com/Modarku/CSIT327-TheDailyBean/blob/6297d02776b9b4679837ef8d064232e033f47e7a/dailybean/static/images/The%20Daily%20Bean%20-%20ERD.png)
 
 [UI/UX Design](https://www.figma.com/design/J0LWe4lGRKWkQbFVbVHrrq/The-Daily-Bean---UI%2FUX?node-id=0-1&t=SCoVHS2K7E38KZa8-1)
+![UI/UX Design](https://github.com/Modarku/CSIT327-TheDailyBean/blob/a44a1dfd6d58f88fce2072139df07d8bdf07365a/dailybean/static/images/The%20Daily%20Bean%20-%20UI_UX.png)
 
