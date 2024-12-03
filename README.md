@@ -1,6 +1,70 @@
 # CSIT327-TheDailyBean
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/aa9724d6-7a50-4b92-8956-c0fbf436ee9f" alt="The Daily Bean Logo" width="200" height="auto" />
+</p>
 
-Functional Requirements Document
+Welcome to **The Daily Bean**, your ultimate e-commerce destination where you can shop and subscribe to a curated selection of premium products, tailored to elevate your daily routine!
+
+## Getting Started
+
+Clone The Daily Bean project by following these steps.
+
+### Prerequisites
+
+Before you begin, ensure you have the following software installed:
+
+- **Python 3.x** or later
+- **Django** for back-end development
+- **Pip** for installing Python dependencies
+
+Install **Django** and **other dependencies**:
+
+```sh
+pip install django
+```
+
+### Installation
+
+1. Clone the repository
+
+2. Install the required dependencies
+
+   ```sh
+   pip install pillow
+   
+   pip install dateutils
+   ```
+
+3. Change Directory
+   ```sh
+   cd dailybean
+   ```
+4. Set up the database
+   ```sh
+   python manage.py migrate
+   ```
+5. Create a superuser (optional for admin access)
+   ```sh
+   python manage.py createsuperuser
+   ```
+6. Run the development server
+   ```sh
+   python manage.py runserver
+   ```
+
+<br>
+
+## Built-With
+
+- ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)
+- ![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
+- ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+- ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+- ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+
+<br>
+
+## Functional Requirements Document
 
 _for_
 
@@ -57,9 +121,12 @@ The Daily Bean is an online coffee bean marketplace where passion for coffee mee
 
 **Links**
 
-[Gantt Chart](https://docs.google.com/spreadsheets/d/1lFSu1Gdd4UFz1T0iWEvJSLEl58MotyHC/edit?usp=sharing&ouid=103308061537347084844&rtpof=true&sd=true)
+## [Gantt Chart](https://docs.google.com/spreadsheets/d/1lFSu1Gdd4UFz1T0iWEvJSLEl58MotyHC/edit?usp=sharing&ouid=103308061537347084844&rtpof=true&sd=true)
+![Gantt Chart](https://github.com/Modarku/CSIT327-TheDailyBean/blob/a44a1dfd6d58f88fce2072139df07d8bdf07365a/dailybean/static/images/The%20Daily%20Bean%20-%20Gantt%20Chart.jpg)
 
-[Entity Relationship Diagram](https://drive.google.com/file/d/1YvhLOIkDxHGi0yj7NyAK2DyY4haKudIt/view?usp=sharing)
+## [Entity Relationship Diagram](https://drive.google.com/file/d/1YvhLOIkDxHGi0yj7NyAK2DyY4haKudIt/view?usp=sharing)
+![Entity Relationship Diagram](https://github.com/Modarku/CSIT327-TheDailyBean/blob/6297d02776b9b4679837ef8d064232e033f47e7a/dailybean/static/images/The%20Daily%20Bean%20-%20ERD.png)
 
-[UI/UX Design](https://www.figma.com/design/J0LWe4lGRKWkQbFVbVHrrq/The-Daily-Bean---UI%2FUX?node-id=0-1&t=SCoVHS2K7E38KZa8-1)
+## [UI/UX Design](https://www.figma.com/design/J0LWe4lGRKWkQbFVbVHrrq/The-Daily-Bean---UI%2FUX?node-id=0-1&t=SCoVHS2K7E38KZa8-1)
+![UI/UX Design](https://github.com/Modarku/CSIT327-TheDailyBean/blob/a44a1dfd6d58f88fce2072139df07d8bdf07365a/dailybean/static/images/The%20Daily%20Bean%20-%20UI_UX.png)
 
