@@ -80,7 +80,7 @@
                                     <h4 style="align-self: center; margin-left: 10px;">{{ order.product.product_name }}</h4>
                                 </div>
                                 
-                                <p class="product-price" id="productPrice" data-value="{{ order.product.price }}" style="align-self: center;">Price: ${{ order.product.price }}</p>
+                                <p class="product-price" id="productPrice-{{ order.id }}" data-value="{{ order.product.price }}" style="align-self: center;">Price: ${{ order.product.price }}</p>
                                 <h4 style="align-self: center;">Qty: 
                                     <input style="align-self: center; width: 60px;" type="number" name="order-quantity" 
                                         value="{{ order.product_amount }}" 
@@ -89,7 +89,7 @@
                                         style="width: 50px; align-self: center;" 
                                         onchange="updateOrderQuantity(this)">
                                 </h4>
-                                <p class="product-price" id="totalPrice" data-value="{{ order.total }}" style="align-self: center;">Total: ${{ order.total }}</p>
+                                <p class="product-price" id="totalPrice-{{ order.id }}" data-value="{{ order.total }}" style="align-self: center;">Total: ${{ order.total }}</p>
                                 <img style="align-self: center; cursor: pointer;" src="{% static 'images/trash-icon.png' %}" data-order-id="{{ order.id }}" onclick="deleteOrder(this.dataset.orderId)">
                             </div>    
                         {% endif %}
@@ -117,9 +117,9 @@
         function updateOrderQuantity(inputElement) {
             const orderId = inputElement.dataset.orderId;
             const newQuantity = inputElement.value; 
-            const totalPrice = document.getElementById('totalPrice')
+            const totalPrice = document.getElementById('totalPrice-' + orderId)
 
-            const productPrice = document.getElementById('productPrice').dataset.value;
+            const productPrice = document.getElementById('productPrice-' + orderId).dataset.value;
             const newTotalPrice = (productPrice * newQuantity).toFixed(2);
 
             fetch('/cart/update-order-quantity/', {
