@@ -18,8 +18,10 @@ def signup_view(request):
             )
             user.set_password(form.cleaned_data['password'])
             user.save()
-            messages.success(request, 'Signup successful! You can now log in.')
+            messages.success(request, 'Signup successful! You can now log in.', extra_tags='msg_signup_user')
             return redirect('login')
+        else:
+            messages.error(request, 'Invalid credentials.', extra_tags='msg_signup_user')
     else:
         form = SignUpForm()
 

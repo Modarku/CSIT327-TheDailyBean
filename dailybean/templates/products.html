@@ -42,7 +42,7 @@
                 {% endif %}
                 <!-- Search Bar -->
                 <div class="search-container">
-                    <form action="{% url 'search_products' %}" method="get">
+                    <form action="{% url 'search_products' %}" method="get" class="search-bar">
                         <input class="search-input" type="text" name="q" placeholder="What are you looking for?">
                         <input type="hidden" name="page" value="products.html">
                         <button type="submit" class="search-btn">Search</button>
@@ -50,6 +50,10 @@
                 </div>
             </div>
         </div>
+
+        <section>
+            <h2>Click on the BEANS to view details</h2>
+        </section>
         
         <!-- Product Listings -->
         <div class="product-list" style="justify-content: center;">

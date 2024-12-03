@@ -29,10 +29,16 @@
                         <li><p>Pick one coffee bean of your choice</p></li>
                         <li><p>Free coffee mood chart</p></li>
                     </ul>
-                    {% if has_onebean %}
-                        <button id="btn-one-bean" class="btn">Currently Subscribed</button>
+                    {% if is_authenticated %}
+                        {% if has_onebean %}
+                            <button id="btn-one-bean" class="btn" disabled>Currently Subscribed</button>
+                        {% else %}
+                            <button id="btn-one-bean" class="btn" onclick="orderSubscription()" >Pick one bean</button>
+                        {% endif %}
                     {% else %}
-                        <button id="btn-one-bean" class="btn" onclick="orderSubscription()" >Pick one bean</button>
+                        <button id="btn-one-bean" class="btn">
+                            <a href="{% url 'login' %}" style="text-decoration:none; color:inherit;">Log in to add to subscribe!</a>
+                        </button>
                     {% endif %}
                 </div>
 
@@ -43,10 +49,16 @@
                         <li><p>Pick five small packages of coffee beans of your choice</p></li>
                         <li><p>Free coffee notebook</p></li>
                     </ul>
-                    {% if has_weeklybean %}
-                        <button id="btn-weekly-bean" class="btn" disabled >Currently Subscribed</button>
+                    {% if is_authenticated %}
+                        {% if has_weeklybean %}
+                            <button id="btn-weekly-bean" class="btn" disabled >Currently Subscribed</button>
+                        {% else %}
+                            <button id="btn-weekly-bean" class="btn" onclick="orderSubscription()" >Pick five beans</button>
+                        {% endif %}
                     {% else %}
-                        <button id="btn-weekly-bean" class="btn" onclick="orderSubscription()" >Pick five beans</button>
+                        <button id="btn-weekly-bean" class="btn">
+                            <a href="{% url 'login' %}" style="text-decoration:none; color:inherit;">Log in to add to subscribe!</a>
+                        </button>
                     {% endif %}
                 </div>
 
@@ -67,7 +79,7 @@
                 {% endif %}
                 <!-- Search Bar -->
                 <div class="search-container">
-                    <form action="{% url 'search_products' %}" method="get">
+                    <form action="{% url 'search_products' %}" method="get" class="search-bar">
                         <input class="search-input" type="text" name="q" placeholder="What are you looking for?">
                         <input type="hidden" name="page" value="subscriptions.html">
                         <button type="submit" class="search-btn">Search</button>
@@ -75,14 +87,22 @@
                 </div>
             </div>
         </section>
+
+        <section>
+            <h2>Click on the BEANS to select</h2>
+        </section>
     
         <!-- Product Listings -->
         <div class="product-list" style="justify-content: center;">
             {% for product in products %}
                 {% if product.is_available %}
-                    <a href="{% url 'product_detail' product.id %}?from=subscriptions" style="text-decoration: none; color: inherit;">
-                        <input type="checkbox" id="checkbox-product-{{ product.id }}" data-product-id="{{ product.id }}" onclick="checkAmount(this)">
-                        <label for="checkbox-product-{{ product.id }}">
+                    <!-- <a href="{% url 'product_detail' product.id %}?from=subscriptions" style="text-decoration: none; color: inherit;"> -->
+                    <label for="checkbox-product-{{ product.id }}" class="product-item-wrapper">
+                        <input type="checkbox" 
+                            id="checkbox-product-{{ product.id }}"
+                            data-product-id="{{ product.id }}"
+                            onclick="checkAmount(this)"
+                            style="display: none;">
                         <div class="product-item">
                             <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}">
                             <h4>{{ product.product_name }}</h4>
@@ -115,10 +135,9 @@
                                 {% endif %}
                             </div>
                             <p class="product-price">${{ product.price }}</p>
-                            <input type="checkbox" id="checkbox-product-{{ product.id }}" data-product-id="{{ product.id }}" onclick="checkAmount(this)">
                         </div>
-                        </label>
-                    </a>    
+                    </label>
+                    <!-- </a>-->
                 {% endif %}
             {% empty %}
                 <p>No products are available at the moment.</p>

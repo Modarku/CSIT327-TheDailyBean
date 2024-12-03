@@ -24,7 +24,12 @@
         {% if messages %}
             <ul>
                 {% for message in messages %}
+                {% if 'msg_login_user' in message.tags %}
                     <li class="error-text">{{ message }}</li>
+                {% endif %}
+                {% if 'msg_signup_user' in message.tags %}
+                    <li class="success-text">{{ message }}</li>
+                {% endif %}
                 {% endfor %}
             </ul>
         {% endif %}

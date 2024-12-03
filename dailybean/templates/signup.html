@@ -37,19 +37,76 @@
         <!-- Signup Form -->
         <form method="POST" class="signup-form">
             {% csrf_token %}
-            {{ form.username.label_tag }} {{ form.username }}
-            {{ form.email.label_tag }} {{ form.email }}
-            {{ form.first_name.label_tag }} {{ form.first_name }}
-            {{ form.last_name.label_tag }} {{ form.last_name }}
             
+            <!-- Username Field -->
+            <div>
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <ul class="error-list">
+                        {% for error in form.username.errors %}
+                            <li class="error-text">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            
+            <!-- Email Field -->
+            <div>
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <ul class="error-list">
+                        {% for error in form.email.errors %}
+                            <li class="error-text">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            
+            <!-- First Name Field -->
+            <div>
+                {{ form.first_name.label_tag }}
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                    <ul class="error-list">
+                        {% for error in form.first_name.errors %}
+                            <li class="error-text">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            
+            <!-- Last Name Field -->
+            <div>
+                {{ form.last_name.label_tag }}
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                    <ul class="error-list">
+                        {% for error in form.last_name.errors %}
+                            <li class="error-text">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            
+            <!-- Password Field -->
             <div class="password-field">
                 {{ form.password.label_tag }}
                 {{ form.password }}
                 <button type="button" id="toggle-password" class="toggle-password">
                     <img src="{% static 'images/eye-icon.png' %}" alt="Show Password" class="show-password fa-eye">
                 </button>
+                {% if form.password.errors %}
+                    <ul class="error-list">
+                        {% for error in form.password.errors %}
+                            <li class="error-text">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
             
+            <!-- Password Confirm Field -->
             <div class="password-field">
                 {{ form.password_confirm.label_tag }}
                 {{ form.password_confirm }}
@@ -57,6 +114,22 @@
                     <img src="{% static 'images/eye-icon.png' %}" alt="Show Password" class="show-password fa-eye">
                 </button>
             </div>
+            {% if form.password_confirm.errors %}
+                <ul class="error-list">
+                    {% for error in form.password_confirm.errors %}
+                        <li class="error-text">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            
+            <!-- General Form Errors -->
+            {% if form.non_field_errors %}
+                <ul class="error-list general-errors">
+                    {% for error in form.non_field_errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             
             <button type="submit" class="btn signup-btn">Sign Up</button>
         </form>
