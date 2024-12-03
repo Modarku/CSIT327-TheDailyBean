@@ -39,16 +39,16 @@ def view_products(request):
 
 def product_detail(request, id):
     user = request.user
-    print(user.is_authenticated)
+    # print(user.is_authenticated)
     product = get_object_or_404(Product, id=id)
     reviews = Review.objects.filter(product=id).order_by('-id')
     favorites = Favorite.objects.filter(product=product)
     is_favorited = False
     orders = None
 
-    if user == None: 
+    if user is not None: 
         orders = Order.objects.filter(user=user)
-        is_favorited = favorites.filter(user=request.user).exists
+        is_favorited = favorites.filter(user=request.user).exists()
     
     #Product average rating helper function
     product_rating_helper(product)
@@ -77,7 +77,6 @@ def product_detail(request, id):
         'is_favorited' : is_favorited,
         'favorites_count' : favorites.count
     }
-
     return render(request, 'product_detail.html', context)
 
 @login_required
