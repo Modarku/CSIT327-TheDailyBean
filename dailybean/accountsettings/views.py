@@ -4,9 +4,10 @@ from django.views.decorators.http import require_http_methods
 from .forms import UserEditForm, SetPasswordForm, AddressForm
 from .models import Address
 from payment.models import Order
-from home.models import ProductSubscription
+from home.models import Product, ProductSubscription
 from django.contrib import messages
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 import logging
 
 logger = logging.getLogger(__name__)
@@ -139,8 +140,33 @@ def get_address(request, address_id):
 @require_http_methods(["DELETE"])
 def cancel_subscription(request, subscription_id):
     try:
-        subscription = ProductSubscription.objects.get(id=subscription_id)
-        subscription.delete()
+        to_cancel = ProductSubscription.objects.get(id=subscription_id)
+        subscriptions = ProductSubscription.objects.filter(subscription_type = to_cancel.subscription_type)
+
+        for sub in subscriptions:
+            subscription_stock_add(sub)
+            sub.delete()
+        
         return JsonResponse({'message': 'Subscription cancelled successfully.'}, status=200)
     except Order.DoesNotExist:
         return JsonResponse({'error': 'Subscription not found.'}, status=404)
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        if not request.user.check_password(password):
+            messages.error(request, "Incorrect password.")
+            return redirect('delete_account')
+
+        user = request.user
+        user.delete()
+        messages.success(request, "Your account has been successfully deleted.")
+        return redirect('homepage')
+
+    return render(request, 'delete_account.html')
+
+def subscription_stock_add(subscription):
+        product = Product.objects.get(id=subscription.product.id)
+        product.stock += 1
+        product.save()
