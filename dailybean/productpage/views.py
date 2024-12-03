@@ -17,14 +17,15 @@ def view_products(request):
     user = request.user
     page = request.GET.get('page', 'products')
     template = 'subscriptions.html' if page == 'subscriptions' else 'products.html'
-
-    product_subscriptions = ProductSubscription.objects.filter(user=user)
     has_onebean = False
     has_weeklybean = False
 
-    for product_subscription in product_subscriptions:
-       if product_subscription.subscription_type == 'Onebean': has_onebean = True
-       if product_subscription.subscription_type == 'Weeklybean': has_weeklybean = True
+    if user == None:
+        product_subscriptions = ProductSubscription.objects.filter(user=user)
+
+        for product_subscription in product_subscriptions:
+            if product_subscription.subscription_type == 'Onebean': has_onebean = True
+            if product_subscription.subscription_type == 'Weeklybean': has_weeklybean = True
 
     context = {
         'is_authenticated': request.user.is_authenticated,
@@ -38,10 +39,16 @@ def view_products(request):
 
 def product_detail(request, id):
     user = request.user
+    print(user.is_authenticated)
     product = get_object_or_404(Product, id=id)
     reviews = Review.objects.filter(product=id).order_by('-id')
-    orders = Order.objects.filter(user=user)
     favorites = Favorite.objects.filter(product=product)
+    is_favorited = False
+    orders = None
+
+    if user == None: 
+        orders = Order.objects.filter(user=user)
+        is_favorited = favorites.filter(user=request.user).exists
     
     #Product average rating helper function
     product_rating_helper(product)
@@ -60,14 +67,14 @@ def product_detail(request, id):
         form = ReviewForm()
 
     context = {
-        'user': request.user,
+        'user': user,
         'is_authenticated': request.user.is_authenticated,
         'is_admin': request.user.is_staff,
         'product': get_object_or_404(Product, id=id),
         'orders' : orders,
         'reviews': reviews,
         'form' : form,
-        'is_favorited' : favorites.filter(user=request.user).exists,
+        'is_favorited' : is_favorited,
         'favorites_count' : favorites.count
     }
 

@@ -47,6 +47,10 @@
                 {{ form.last_name.errors }}
                 {{ form.last_name }}
 
+                <label for="phone_number">Phone Number:</label>
+                {{ form.phone_number.errors }}
+                {{ form.phone_number }}
+
                 <label for="datejoined">Date joined:</label>
                 <p class="info-display">{{ user.date_joined }}</p>
             
@@ -61,8 +65,13 @@
                 </div>
             </form>
             {% if is_authenticated %}
-            <a href="{% url 'logout' %}"><button class="btn edit-email-btn">Logout</button></a>
+            <a href="{% url 'logout' %}"><button class="btn edit-email-btn" style="margin-bottom: 20px;">Logout</button></a>
             {% endif %}
+            <div class="delete-account-section">
+                <h2>Delete Account</h2>
+                <p>Deleting your account will remove all your data permanently.</p>
+                <a href="{% url 'delete_account' %}" class="btn btn-danger">Delete My Account</a>
+            </div>
         </div>
     </section>
 
@@ -209,7 +218,7 @@
                 <p>Nothing bought yet... :(</p>
             {% endfor %}
         </div>
-    </section>
+    </section>s
 
     <script>
         function confirmEditUser() {

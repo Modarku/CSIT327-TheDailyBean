@@ -1,0 +1,30 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Payment Successful - The Daily Bean
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <div class="checkout-container">
+        <h1 style="margin: 20px;">Payment Successful</h1>
+        
+        <section class="order-summary">
+            <h2>Thank you for your purchase!</h2>
+            <p>Your payment has been successfully processed.</p>
+            <p>We appreciate your business and hope you enjoy your order.</p>
+            
+            <div class="summary-line">
+                <span>If you have any questions, feel free to </span>
+                <a href="{% url 'contact' %}" class="contact-link">contact us</a>.
+            </div>
+        </section>
+
+        <button onclick="window.location.href='/'" class="btn confirm" style="margin-top: 20px;">
+            Back to Home
+        </button>
+    </div>
+{% endblock %}

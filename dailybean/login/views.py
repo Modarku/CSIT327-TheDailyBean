@@ -20,10 +20,9 @@ def login_view(request):
 
             if user and user.check_password(password):
                 auth.login(request, user)
-                messages.success(request, 'Login successful!')
                 return redirect('homepage')
             else:
-                messages.error(request, 'Invalid credentials.')
+                messages.error(request, 'Invalid credentials.', extra_tags='msg_login_user')
     else:
         form = LoginForm()
 

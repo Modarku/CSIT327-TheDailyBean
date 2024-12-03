@@ -14,4 +14,4 @@ class Address(models.Model):
     is_selected = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.name}, {self.street_number} {self.street}, {self.city}, {self.country}, {self.additional_details}"
+        return f"{self.name}, {self.street_number} {self.street}, {self.city}, {self.country}"

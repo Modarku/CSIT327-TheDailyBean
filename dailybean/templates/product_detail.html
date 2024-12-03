@@ -115,7 +115,13 @@
                                 <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock }}">
                             </div>
                             <div>
-                                <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                                {% if is_authenticated %}
+                                    <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                                {% else %}
+                                    <button type="button" class="add-to-cart-btn">
+                                        <a href="{% url 'login' %}" style="text-decoration:none; color:inherit;">Log in to add to cart!</a>
+                                    </button>
+                                {% endif %}
                             </div>
                         </form>
                         <br>
@@ -132,7 +138,10 @@
                                 </button>
                             </form>
                         {% else %}
-                            <p><a href="{% url 'login' %}">Log in</a> to favorite this product.</p>
+                        <button type="submit" class="btn" style="display: flex; align-items: center; gap: 10px" disabled>
+                            <img src="/static/images/unfilled_heart.png" alt="Add to Favorites" style="height:32px; width:auto;">
+                            <span style="margin:auto;">{{ favorites_count }}</span>
+                        </button>
                         {% endif %}
                     {% endif %}
                     <br><hr><br>
@@ -146,7 +155,7 @@
                             {% endif %}
                         </form>
                     {% else %}
-                        <p><a href="{% url 'login' %}">Log in</a> to favorite this product.</p>
+                    <a href="{% url 'login' %}" class="btn" style="text-decoration: none; color: #1E1E1E">Log in to favorite this product!</a>
                     {% endif %}
                 </div>
             </div>
