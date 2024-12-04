@@ -44,7 +44,11 @@ def update_order_quantity(request):
             order = Order.objects.get(id=order_id)
             order.product_amount = quantity
             order.total = total_price
-            order.save()
+            
+            if order.product_amount <= order.product.stock and order.product_amount != 0:
+                order.save()
+            else:
+                raise Exception("Error: quantity selected exceeds the current product stock.")
 
             return JsonResponse({'success': True})
         except Exception as e:

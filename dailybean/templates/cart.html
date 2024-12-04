@@ -85,6 +85,7 @@
                                     <input style="align-self: center; width: 60px;" type="number" name="order-quantity" 
                                         value="{{ order.product_amount }}" 
                                         min="1" 
+                                        max="{{ order.product.stock }}"
                                         data-order-id="{{ order.id }}" 
                                         style="width: 50px; align-self: center;" 
                                         onchange="updateOrderQuantity(this)">
