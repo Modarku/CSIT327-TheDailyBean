@@ -118,7 +118,7 @@
         previewDescription.innerHTML = formatTextWithLineBreaks(descriptionInput.value);
         previewIngredients.innerHTML = formatTextWithLineBreaks(ingredientsInput.value);
         previewShelfLife.textContent = shelfLifeInput.value;
-        previewPrice.textContent = `$${priceInput.value}`;
+        previewPrice.textContent = `₱${priceInput.value}`;
     
         // Set image if available
         if (imageInput.files.length === 0) {
@@ -139,7 +139,7 @@
             previewShelfLife.textContent = shelfLifeInput.value;
         });
         priceInput.addEventListener('input', () => {
-            previewPrice.textContent = `$${priceInput.value}`;
+            previewPrice.textContent = `₱${priceInput.value}`;
         });
     
         // Update image preview on change
