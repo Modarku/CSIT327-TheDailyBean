@@ -126,6 +126,7 @@ The Daily Bean is an online coffee bean marketplace where passion for coffee mee
 
 ## [Entity Relationship Diagram](https://drive.google.com/file/d/1YvhLOIkDxHGi0yj7NyAK2DyY4haKudIt/view?usp=sharing)
 ![Entity Relationship Diagram](https://github.com/Modarku/CSIT327-TheDailyBean/blob/6297d02776b9b4679837ef8d064232e033f47e7a/dailybean/static/images/The%20Daily%20Bean%20-%20ERD.png)
+<i>Missing: Favorites Entity that contains a foreign key of User and Products</i>
 
 ## [UI/UX Design](https://www.figma.com/design/J0LWe4lGRKWkQbFVbVHrrq/The-Daily-Bean---UI%2FUX?node-id=0-1&t=SCoVHS2K7E38KZa8-1)
 ![UI/UX Design](https://github.com/Modarku/CSIT327-TheDailyBean/blob/a44a1dfd6d58f88fce2072139df07d8bdf07365a/dailybean/static/images/The%20Daily%20Bean%20-%20UI_UX.png)
