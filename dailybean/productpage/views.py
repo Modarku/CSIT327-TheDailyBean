@@ -46,10 +46,12 @@ def product_detail(request, id):
     favorites = Favorite.objects.filter(product=product)
     is_favorited = False
     orders = None
+    is_break = False
 
     if is_authenticated: 
         orders = Order.objects.filter(user=user)
         is_favorited = favorites.filter(user=request.user).exists()
+        is_break = any(order.product.id == product.id for order in orders)
     
     #Product average rating helper function
     product_rating_helper(product)
@@ -75,6 +77,7 @@ def product_detail(request, id):
         'orders' : orders,
         'reviews': reviews,
         'form' : form,
+        'is_break' : is_break,
         'is_favorited' : is_favorited,
         'favorites_count' : favorites.count
     }

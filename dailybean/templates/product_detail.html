@@ -176,12 +176,12 @@
                             <label for="text">Your Review:</label><br>
                             {{ form.text }}
                         </div>
-                        <p>You must buy the product to comment and rate.</p>
-                        {% for order in orders %}
-                            {% if order.product.id == product.id %}
-                                <button type="submit" class="comment-btn">Comment</button>
-                            {% endif %}
-                        {% endfor %}
+
+                        {% if is_break %}
+                            <button type="submit" class="comment-btn">Comment</button>
+                        {% else %}
+                            <p>You must buy the product to comment and rate.</p>
+                        {% endif %}
                         
                     </form>
                 </div>
